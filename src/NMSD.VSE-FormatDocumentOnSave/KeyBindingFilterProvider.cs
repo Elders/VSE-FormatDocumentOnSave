@@ -23,10 +23,6 @@ namespace KeyBindingTest
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
-            IWpfTextView textView = editorFactory.GetWpfTextView(textViewAdapter);
-            if (textView == null)
-                return;
-
             var dte = (DTE)ServiceProvider.GetService(typeof(DTE));
             AddCommandFilter(textViewAdapter, new KeyBindingCommandFilter(dte));
         }
