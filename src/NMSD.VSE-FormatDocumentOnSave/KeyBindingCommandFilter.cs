@@ -2,7 +2,7 @@
 using EnvDTE;
 using Microsoft.VisualStudio.OLE.Interop;
 
-namespace KeyBindingTest
+namespace NMSD.VSE_FormatDocumentOnSave
 {
     internal class KeyBindingCommandFilter : IOleCommandTarget
     {

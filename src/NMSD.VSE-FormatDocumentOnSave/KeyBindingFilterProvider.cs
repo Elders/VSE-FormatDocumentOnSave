@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
 
-namespace KeyBindingTest
+namespace NMSD.VSE_FormatDocumentOnSave
 {
     [Export(typeof(IVsTextViewCreationListener))]
     [ContentType("text")]
