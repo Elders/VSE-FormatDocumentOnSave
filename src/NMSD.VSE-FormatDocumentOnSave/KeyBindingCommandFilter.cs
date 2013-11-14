@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using EnvDTE;
 using Microsoft.VisualStudio.OLE.Interop;
 
@@ -17,11 +20,35 @@ namespace NMSD.VSE_FormatDocumentOnSave
             this.dte = dte;
         }
 
+        void FormatCurrentActiveDocument()
+        {
+            if (dte.ActiveWindow.Kind == "Document")
+                dte.ExecuteCommand("Edit.FormatDocument", string.Empty);
+        }
+
+        IEnumerable<Document> GetNonSavedDocuments()
+        {
+            return Enumerable.Where<Document>(Enumerable.OfType<Document>((IEnumerable)dte.Documents), (Func<Document, bool>)(document => !document.Saved));
+        }
+
         int IOleCommandTarget.Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
-            if (pguidCmdGroup == Guid.Parse(Microsoft.VisualStudio.VSConstants.CMDSETID.StandardCommandSet97_string) && nCmdID == (uint)Microsoft.VisualStudio.VSConstants.VSStd97CmdID.SaveProjectItem)
+            if (pguidCmdGroup == Guid.Parse(Microsoft.VisualStudio.VSConstants.CMDSETID.StandardCommandSet97_string))
             {
-                dte.ExecuteCommand("Edit.FormatDocument", string.Empty);
+                if (nCmdID == (uint)Microsoft.VisualStudio.VSConstants.VSStd97CmdID.SaveProjectItem)
+                {
+                    FormatCurrentActiveDocument();
+                }
+                else if (nCmdID == (uint)Microsoft.VisualStudio.VSConstants.VSStd97CmdID.SaveSolution)
+                {
+                    var currentDoc = dte.ActiveDocument;
+                    foreach (var doc in GetNonSavedDocuments())
+                    {
+                        doc.Activate();
+                        FormatCurrentActiveDocument();
+                    }
+                    currentDoc.Activate();
+                }
             }
             return m_nextTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
         }
@@ -30,5 +57,6 @@ namespace NMSD.VSE_FormatDocumentOnSave
         {
             return m_nextTarget.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
         }
+
     }
 }
