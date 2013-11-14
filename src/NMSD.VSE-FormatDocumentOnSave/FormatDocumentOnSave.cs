@@ -33,17 +33,24 @@ namespace NMSD.VSE_FormatDocumentOnSave
 
         void FormatCurrentActiveDocument()
         {
-            dynamic selection = (dynamic)dte.ActiveDocument.Selection;
-            int line = selection.CurrentLine;
-            int col = selection.CurrentColumn;
+            try
+            {
+                if (dte.ActiveWindow.Kind == "Document")
+                {
+                    dynamic selection = (dynamic)dte.ActiveDocument.Selection;
+                    int line = selection.CurrentLine;
+                    int col = selection.CurrentColumn;
 
-            if (dte.ActiveWindow.Kind == "Document")
-                dte.ExecuteCommand("Edit.FormatDocument", string.Empty);
 
-            if (!selection.IsEmpty)
-                selection.Cancel();
+                    dte.ExecuteCommand("Edit.FormatDocument", string.Empty);
 
-            selection.MoveToLineAndOffset(line, col, false);
+                    if (!selection.IsEmpty)
+                        selection.Cancel();
+
+                    selection.MoveToLineAndOffset(line, col, false);
+                }
+            }
+            catch (Exception) { }
         }
 
         void FormatDocument(string pguidCmdGroup, uint nCmdID)
