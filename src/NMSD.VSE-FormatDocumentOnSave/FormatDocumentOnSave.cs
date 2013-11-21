@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using EnvDTE;
+using Microsoft.VisualStudio.TextManager.Interop;
 
 namespace NMSD.VSE_FormatDocumentOnSave
 {
@@ -13,9 +15,11 @@ namespace NMSD.VSE_FormatDocumentOnSave
         private DTE dte;
 
         private static bool shouldRegisterFormatDocumentOnSave = true;
+        private readonly IVsTextManager txtMngr;
 
-        public FormatDocumentOnSave(DTE dte)
+        public FormatDocumentOnSave(DTE dte, IVsTextManager txtMngr)
         {
+            this.txtMngr = txtMngr;
             this.dte = dte;
             if (shouldRegisterFormatDocumentOnSave)
             {
@@ -35,22 +39,41 @@ namespace NMSD.VSE_FormatDocumentOnSave
         {
             try
             {
+                bool useManualSelection = dte.ActiveDocument.ProjectItem.Name.EndsWith(".cshtml", true, CultureInfo.InvariantCulture);
+
                 if (dte.ActiveWindow.Kind == "Document")
                 {
-                    dynamic selection = (dynamic)dte.ActiveDocument.Selection;
-                    int line = selection.CurrentLine;
-                    int col = selection.CurrentColumn;
-
-
-                    dte.ExecuteCommand("Edit.FormatDocument", string.Empty);
-
-                    if (!selection.IsEmpty)
-                        selection.Cancel();
-
-                    selection.MoveToLineAndOffset(line, col, false);
+                    if (useManualSelection)
+                        FormatCSHTML();
+                    else
+                        dte.ExecuteCommand("Edit.FormatDocument", string.Empty);
                 }
             }
             catch (Exception) { }
+        }
+
+        void FormatCSHTML()
+        {
+            IVsTextView textViewCurrent;
+            txtMngr.GetActiveView(1, null, out textViewCurrent);    // Gets the TextView (TextEditor) for the current active document
+            int a, b, c, verticalScrollPosition;
+            var scrollInfo = textViewCurrent.GetScrollInfo(1, out a, out b, out c, out verticalScrollPosition);
+
+            dynamic selection = (dynamic)dte.ActiveDocument.Selection;
+            int line = selection.CurrentLine;
+            int lineLength = selection.ActivePoint.LineLength;
+            int col = selection.CurrentColumn;
+
+            dte.ExecuteCommand("Edit.FormatDocument", string.Empty);
+
+            if (!selection.IsEmpty)
+                selection.Cancel();
+
+            selection.GoToLine(line);
+            int offset = col - (lineLength - selection.ActivePoint.LineLength);
+            selection.MoveToLineAndOffset(line, offset, false);
+
+            textViewCurrent.SetScrollPosition(1, verticalScrollPosition);
         }
 
         void FormatDocument(string pguidCmdGroup, uint nCmdID)

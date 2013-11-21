@@ -1,14 +1,7 @@
-﻿using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Runtime.InteropServices;
-using System.ComponentModel.Design;
-using Microsoft.Win32;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.OLE.Interop;
-using Microsoft.VisualStudio.Shell;
+﻿using System.Runtime.InteropServices;
 using EnvDTE;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.TextManager.Interop;
 
 namespace NMSD.VSE_FormatDocumentOnSave
 {
@@ -22,7 +15,6 @@ namespace NMSD.VSE_FormatDocumentOnSave
     /// IVsPackage interface and uses the registration attributes defined in the framework to 
     /// register itself and its components with the shell.
     /// </summary>
-
     [PackageRegistration(UseManagedResourcesOnly = true)]   // This attribute tells the PkgDef creation utility (CreatePkgDef.exe) that this class is a package.
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // This attribute is used to register the information needed to show this package in the Help/About dialog of Visual Studio.
     [ProvideAutoLoad("{f1536ef8-92ec-443c-9ed7-fdadf150da82}")] //To set the UI context to autoload a VSPackage
@@ -47,7 +39,8 @@ namespace NMSD.VSE_FormatDocumentOnSave
         protected override void Initialize()
         {
             DTE dte = (DTE)base.GetService(typeof(DTE));
-            plugin = new FormatDocumentOnSave(dte);
+            var txtMgr = (IVsTextManager)base.GetService(typeof(SVsTextManager));
+            plugin = new FormatDocumentOnSave(dte, txtMgr);
             base.Initialize();
         }
     }
