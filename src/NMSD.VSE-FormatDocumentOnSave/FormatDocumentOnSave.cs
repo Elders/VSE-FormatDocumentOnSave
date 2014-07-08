@@ -89,13 +89,7 @@ namespace NMSD.VSE_FormatDocumentOnSave
                         break;
                     case (uint)Microsoft.VisualStudio.VSConstants.VSStd97CmdID.SaveSolution:
                         {
-                            var currentDoc = dte.ActiveDocument;
-                            foreach (var doc in GetNonSavedDocuments())
-                            {
-                                doc.Activate();
-                                FormatCurrentActiveDocument();
-                            }
-                            currentDoc.Activate();
+                            FormatDocuments(GetNonSavedDocuments());
                         }
                         break;
                     default:
@@ -103,6 +97,17 @@ namespace NMSD.VSE_FormatDocumentOnSave
                 }
             }
 
+        }
+
+        private void FormatDocuments(IEnumerable<Document> documents)
+        {
+            var currentDoc = dte.ActiveDocument;
+            foreach (var doc in documents)
+            {
+                doc.Activate();
+                FormatCurrentActiveDocument();
+            }
+            currentDoc.Activate();
         }
 
         IEnumerable<Document> GetNonSavedDocuments()
