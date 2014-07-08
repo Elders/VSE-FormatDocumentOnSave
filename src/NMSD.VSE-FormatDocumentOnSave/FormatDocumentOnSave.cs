@@ -11,15 +11,12 @@ namespace NMSD.VSE_FormatDocumentOnSave
     {
         private CommandEvents commandEvents;
 
-        private DTE dte;
-
         private static bool shouldRegisterFormatDocumentOnSave = true;
         private readonly DocumentFormatter _documentFormatter;
 
         public FormatDocumentOnSave(DTE dte, DocumentFormatter documentFormatter)
         {
             _documentFormatter = documentFormatter;
-            this.dte = dte;
             if (shouldRegisterFormatDocumentOnSave)
             {
                 commandEvents = dte.Events.CommandEvents;
@@ -47,19 +44,13 @@ namespace NMSD.VSE_FormatDocumentOnSave
                         break;
                     case (uint)Microsoft.VisualStudio.VSConstants.VSStd97CmdID.SaveSolution:
                         {
-                            _documentFormatter.FormatDocuments(GetNonSavedDocuments());
+                            _documentFormatter.FormatNonSavedDocuments();
                         }
                         break;
                     default:
                         break;
                 }
             }
-
-        }
-
-        IEnumerable<Document> GetNonSavedDocuments()
-        {
-            return dte.Documents.OfType<Document>().Where(document => !document.Saved);
         }
     }
 }

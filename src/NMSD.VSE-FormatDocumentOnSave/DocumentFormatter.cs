@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using EnvDTE;
 using Microsoft.VisualStudio.TextManager.Interop;
 
@@ -58,7 +59,7 @@ namespace NMSD.VSE_FormatDocumentOnSave
             textViewCurrent.SetScrollPosition(1, verticalScrollPosition);
         }
 
-        public void FormatDocuments(IEnumerable<Document> documents)
+        private void FormatDocuments(IEnumerable<Document> documents)
         {
             var currentDoc = dte.ActiveDocument;
             foreach (var doc in documents)
@@ -67,6 +68,15 @@ namespace NMSD.VSE_FormatDocumentOnSave
                 FormatCurrentActiveDocument();
             }
             currentDoc.Activate();
+        }
+        public void FormatNonSavedDocuments()
+        {
+            FormatDocuments(GetNonSavedDocuments());
+        }
+
+        IEnumerable<Document> GetNonSavedDocuments()
+        {
+            return dte.Documents.OfType<Document>().Where(document => !document.Saved);
         }
     }
 }
