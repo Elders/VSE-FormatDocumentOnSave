@@ -57,7 +57,7 @@ namespace NMSD.VSE_FormatDocumentOnSave
             IVsTextView textViewCurrent;
             txtMngr.GetActiveView(1, null, out textViewCurrent);    // Gets the TextView (TextEditor) for the current active document
             int a, b, c, verticalScrollPosition;
-            var scrollInfo = textViewCurrent.GetScrollInfo(1, out a, out b, out c, out verticalScrollPosition);
+            textViewCurrent.GetScrollInfo(1, out a, out b, out c, out verticalScrollPosition);
 
             dynamic selection = dte.ActiveDocument.Selection;
             int line = selection.CurrentLine;
