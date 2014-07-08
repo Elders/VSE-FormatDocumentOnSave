@@ -21,7 +21,7 @@ namespace NMSD.VSE_FormatDocumentOnSave
     [Guid(GuidList.guidVSPackage2PkgString)]
     public sealed class FormatDocumentOnSavePackage : Package
     {
-        FormatDocumentOnSave plugin;
+        FormatDocumentOnBeforeSaveCommand plugin;
 
         /// <summary>
         /// Default constructor of the package.
@@ -40,7 +40,7 @@ namespace NMSD.VSE_FormatDocumentOnSave
         {
             DTE dte = (DTE)base.GetService(typeof(DTE));
             var txtMgr = (IVsTextManager)base.GetService(typeof(SVsTextManager));
-            plugin = new FormatDocumentOnSave(dte, new DocumentFormatter(txtMgr, dte));
+            plugin = new FormatDocumentOnBeforeSaveCommand(dte, new DocumentFormatter(txtMgr, dte));
             base.Initialize();
         }
     }
