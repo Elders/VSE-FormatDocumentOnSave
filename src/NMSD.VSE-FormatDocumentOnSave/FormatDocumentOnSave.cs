@@ -9,8 +9,6 @@ namespace NMSD.VSE_FormatDocumentOnSave
 {
     internal class FormatDocumentOnSave
     {
-        private CommandEvents commandEvents;
-
         private static bool shouldRegisterFormatDocumentOnSave = true;
         private readonly DocumentFormatter _documentFormatter;
 
@@ -19,7 +17,7 @@ namespace NMSD.VSE_FormatDocumentOnSave
             _documentFormatter = documentFormatter;
             if (shouldRegisterFormatDocumentOnSave)
             {
-                commandEvents = dte.Events.CommandEvents;
+                var commandEvents = dte.Events.CommandEvents;
                 commandEvents.BeforeExecute += commandEvents_BeforeExecute;
 
                 shouldRegisterFormatDocumentOnSave = false;
