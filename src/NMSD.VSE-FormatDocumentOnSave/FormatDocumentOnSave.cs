@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using EnvDTE;
+﻿using EnvDTE;
+using Microsoft.VisualStudio;
 
 namespace NMSD.VSE_FormatDocumentOnSave
 {
@@ -31,23 +27,20 @@ namespace NMSD.VSE_FormatDocumentOnSave
 
         void FormatDocument(string pguidCmdGroup, uint nCmdID)
         {
-            if (pguidCmdGroup == Microsoft.VisualStudio.VSConstants.CMDSETID.StandardCommandSet97_string)
+            if (pguidCmdGroup != VSConstants.CMDSETID.StandardCommandSet97_string)
+                return;
+
+            switch ((VSConstants.VSStd97CmdID)nCmdID)
             {
-                switch (nCmdID)
-                {
-                    case (uint)Microsoft.VisualStudio.VSConstants.VSStd97CmdID.SaveProjectItem:
-                        {
-                            _documentFormatter.FormatCurrentActiveDocument();
-                        }
-                        break;
-                    case (uint)Microsoft.VisualStudio.VSConstants.VSStd97CmdID.SaveSolution:
-                        {
-                            _documentFormatter.FormatNonSavedDocuments();
-                        }
-                        break;
-                    default:
-                        break;
-                }
+                case VSConstants.VSStd97CmdID.Save:
+                case VSConstants.VSStd97CmdID.SaveProjectItem:
+                case VSConstants.VSStd97CmdID.SaveAs:
+                case VSConstants.VSStd97CmdID.SaveProjectItemAs:
+                    _documentFormatter.FormatCurrentActiveDocument();
+                    break;
+                case VSConstants.VSStd97CmdID.SaveSolution:
+                    _documentFormatter.FormatNonSavedDocuments();
+                    break;
             }
         }
     }
