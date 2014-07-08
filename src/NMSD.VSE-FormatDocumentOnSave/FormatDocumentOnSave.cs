@@ -35,6 +35,29 @@ namespace NMSD.VSE_FormatDocumentOnSave
             FormatDocument(Guid, (uint)ID);
         }
 
+        void FormatDocument(string pguidCmdGroup, uint nCmdID)
+        {
+            if (pguidCmdGroup == Microsoft.VisualStudio.VSConstants.CMDSETID.StandardCommandSet97_string)
+            {
+                switch (nCmdID)
+                {
+                    case (uint)Microsoft.VisualStudio.VSConstants.VSStd97CmdID.SaveProjectItem:
+                        {
+                            FormatCurrentActiveDocument();
+                        }
+                        break;
+                    case (uint)Microsoft.VisualStudio.VSConstants.VSStd97CmdID.SaveSolution:
+                        {
+                            FormatDocuments(GetNonSavedDocuments());
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        }
+
         void FormatCurrentActiveDocument()
         {
             try
@@ -74,29 +97,6 @@ namespace NMSD.VSE_FormatDocumentOnSave
             selection.MoveToLineAndOffset(line, offset, false);
 
             textViewCurrent.SetScrollPosition(1, verticalScrollPosition);
-        }
-
-        void FormatDocument(string pguidCmdGroup, uint nCmdID)
-        {
-            if (pguidCmdGroup == Microsoft.VisualStudio.VSConstants.CMDSETID.StandardCommandSet97_string)
-            {
-                switch (nCmdID)
-                {
-                    case (uint)Microsoft.VisualStudio.VSConstants.VSStd97CmdID.SaveProjectItem:
-                        {
-                            FormatCurrentActiveDocument();
-                        }
-                        break;
-                    case (uint)Microsoft.VisualStudio.VSConstants.VSStd97CmdID.SaveSolution:
-                        {
-                            FormatDocuments(GetNonSavedDocuments());
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-
         }
 
         private void FormatDocuments(IEnumerable<Document> documents)
