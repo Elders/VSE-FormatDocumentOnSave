@@ -119,7 +119,6 @@
   <ItemGroup>
     <Compile Include="DocumentFormatter.cs" />
     <Compile Include="FormatDocumentOnBeforeSave.cs" />
-    <Compile Include="FormatDocumentOnBeforeSaveCommand.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
