@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using EnvDTE;
-using Microsoft.VisualStudio.TextManager.Interop;
 
 namespace NMSD.VSE_FormatDocumentOnSave
 {
@@ -15,11 +14,11 @@ namespace NMSD.VSE_FormatDocumentOnSave
         private DTE dte;
 
         private static bool shouldRegisterFormatDocumentOnSave = true;
-        private readonly IVsTextManager txtMngr;
+        private readonly DocumentFormatter _documentFormatter;
 
-        public FormatDocumentOnSave(DTE dte, IVsTextManager txtMngr)
+        public FormatDocumentOnSave(DTE dte, DocumentFormatter documentFormatter)
         {
-            this.txtMngr = txtMngr;
+            _documentFormatter = documentFormatter;
             this.dte = dte;
             if (shouldRegisterFormatDocumentOnSave)
             {
@@ -43,12 +42,12 @@ namespace NMSD.VSE_FormatDocumentOnSave
                 {
                     case (uint)Microsoft.VisualStudio.VSConstants.VSStd97CmdID.SaveProjectItem:
                         {
-                            FormatCurrentActiveDocument();
+                            _documentFormatter.FormatCurrentActiveDocument();
                         }
                         break;
                     case (uint)Microsoft.VisualStudio.VSConstants.VSStd97CmdID.SaveSolution:
                         {
-                            FormatDocuments(GetNonSavedDocuments());
+                            _documentFormatter.FormatDocuments(GetNonSavedDocuments());
                         }
                         break;
                     default:
@@ -58,62 +57,9 @@ namespace NMSD.VSE_FormatDocumentOnSave
 
         }
 
-        void FormatCurrentActiveDocument()
-        {
-            try
-            {
-                bool useManualSelection = dte.ActiveDocument.ProjectItem.Name.EndsWith(".cshtml", true, CultureInfo.InvariantCulture);
-
-                if (dte.ActiveWindow.Kind == "Document")
-                {
-                    if (useManualSelection)
-                        FormatCSHTML();
-                    else
-                        dte.ExecuteCommand("Edit.FormatDocument", string.Empty);
-                }
-            }
-            catch (Exception) { }
-        }
-
-        void FormatCSHTML()
-        {
-            IVsTextView textViewCurrent;
-            txtMngr.GetActiveView(1, null, out textViewCurrent);    // Gets the TextView (TextEditor) for the current active document
-            int a, b, c, verticalScrollPosition;
-            textViewCurrent.GetScrollInfo(1, out a, out b, out c, out verticalScrollPosition);
-
-            dynamic selection = dte.ActiveDocument.Selection;
-            int line = selection.CurrentLine;
-            int lineLength = selection.ActivePoint.LineLength;
-            int col = selection.CurrentColumn;
-
-            dte.ExecuteCommand("Edit.FormatDocument", string.Empty);
-
-            if (!selection.IsEmpty)
-                selection.Cancel();
-
-            selection.GoToLine(line);
-            int offset = col - (lineLength - selection.ActivePoint.LineLength);
-            selection.MoveToLineAndOffset(line, offset, false);
-
-            textViewCurrent.SetScrollPosition(1, verticalScrollPosition);
-        }
-
-        private void FormatDocuments(IEnumerable<Document> documents)
-        {
-            var currentDoc = dte.ActiveDocument;
-            foreach (var doc in documents)
-            {
-                doc.Activate();
-                FormatCurrentActiveDocument();
-            }
-            currentDoc.Activate();
-        }
-
         IEnumerable<Document> GetNonSavedDocuments()
         {
             return dte.Documents.OfType<Document>().Where(document => !document.Saved);
         }
-
     }
 }

@@ -117,6 +117,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DocumentFormatter.cs" />
     <Compile Include="FormatDocumentOnSave.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="Resources.Designer.cs">

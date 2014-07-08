@@ -40,7 +40,7 @@ namespace NMSD.VSE_FormatDocumentOnSave
         {
             DTE dte = (DTE)base.GetService(typeof(DTE));
             var txtMgr = (IVsTextManager)base.GetService(typeof(SVsTextManager));
-            plugin = new FormatDocumentOnSave(dte, txtMgr);
+            plugin = new FormatDocumentOnSave(dte, new DocumentFormatter(txtMgr, dte));
             base.Initialize();
         }
     }
