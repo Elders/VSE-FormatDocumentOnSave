@@ -59,7 +59,7 @@ namespace NMSD.VSE_FormatDocumentOnSave
             int a, b, c, verticalScrollPosition;
             var scrollInfo = textViewCurrent.GetScrollInfo(1, out a, out b, out c, out verticalScrollPosition);
 
-            dynamic selection = (dynamic)dte.ActiveDocument.Selection;
+            dynamic selection = dte.ActiveDocument.Selection;
             int line = selection.CurrentLine;
             int lineLength = selection.ActivePoint.LineLength;
             int col = selection.CurrentColumn;
@@ -112,7 +112,7 @@ namespace NMSD.VSE_FormatDocumentOnSave
 
         IEnumerable<Document> GetNonSavedDocuments()
         {
-            return Enumerable.Where<Document>(Enumerable.OfType<Document>((IEnumerable)dte.Documents), (Func<Document, bool>)(document => !document.Saved));
+            return dte.Documents.OfType<Document>().Where(document => !document.Saved);
         }
 
     }
