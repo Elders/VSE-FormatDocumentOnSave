@@ -59,7 +59,7 @@ namespace NMSD.VSE_FormatDocumentOnSave
             textViewCurrent.SetScrollPosition(1, verticalScrollPosition);
         }
 
-        private void FormatDocuments(IEnumerable<Document> documents)
+        public void FormatDocuments(IEnumerable<Document> documents)
         {
             var currentDoc = dte.ActiveDocument;
             foreach (var doc in documents)
