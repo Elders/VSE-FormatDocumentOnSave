@@ -4,7 +4,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace NMSD.VSE_FormatDocumentOnSave
+namespace Elders.VSE_FormatDocumentOnSave
 {
     internal class FormatDocumentOnBeforeSave : IVsRunningDocTableEvents3
     {

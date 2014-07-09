@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NMSD.VSE-FormatDocumentOnSave", "NMSD.VSE-FormatDocumentOnSave\NMSD.VSE-FormatDocumentOnSave.csproj", "{3F4BBF49-B61A-4DD9-8057-EADBECE02EE6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elders.VSE-FormatDocumentOnSave", "Elders.VSE-FormatDocumentOnSave\Elders.VSE-FormatDocumentOnSave.csproj", "{3F4BBF49-B61A-4DD9-8057-EADBECE02EE6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

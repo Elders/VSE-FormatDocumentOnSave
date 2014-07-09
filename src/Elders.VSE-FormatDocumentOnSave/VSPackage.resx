@@ -123,7 +123,7 @@
   <data name="112" xml:space="preserve">
     <value>Enables auto formatting of the code when you save a file. Visual Studio supports auto formatting of the code with the CTRL+E,D or CTRL+E,F key shortcuts but with this extension the command 'Format Document' is executed on Save.
 
-You can find the source here: https://github.com/NMSD/VSE-FormatDocumentOnSave</value>
+You can find the source here: https://github.com/Elders/VSE-FormatDocumentOnSave</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="400" type="System.Resources.ResXFileRef, System.Windows.Forms">

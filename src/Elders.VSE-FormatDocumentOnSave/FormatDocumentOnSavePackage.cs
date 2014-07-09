@@ -3,7 +3,7 @@ using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TextManager.Interop;
 
-namespace NMSD.VSE_FormatDocumentOnSave
+namespace Elders.VSE_FormatDocumentOnSave
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.

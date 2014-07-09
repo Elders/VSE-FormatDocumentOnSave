@@ -2,7 +2,7 @@
 // MUST match guids.h
 using System;
 
-namespace NMSD.VSE_FormatDocumentOnSave
+namespace Elders.VSE_FormatDocumentOnSave
 {
     static class GuidList
     {

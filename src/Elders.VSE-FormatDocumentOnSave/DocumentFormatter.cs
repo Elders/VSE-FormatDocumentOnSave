@@ -5,7 +5,7 @@ using System.Linq;
 using EnvDTE;
 using Microsoft.VisualStudio.TextManager.Interop;
 
-namespace NMSD.VSE_FormatDocumentOnSave
+namespace Elders.VSE_FormatDocumentOnSave
 {
     internal class DocumentFormatter
     {
