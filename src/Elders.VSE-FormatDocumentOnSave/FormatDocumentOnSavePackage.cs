@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
+using System.ComponentModel;
 
 namespace Elders.VSE_FormatDocumentOnSave
 {
@@ -18,6 +19,7 @@ namespace Elders.VSE_FormatDocumentOnSave
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // This attribute is used to register the information needed to show this package in the Help/About dialog of Visual Studio.
     [ProvideAutoLoad("{f1536ef8-92ec-443c-9ed7-fdadf150da82}")] //To set the UI context to autoload a VSPackage
     [Guid(GuidList.guidVSPackage2PkgString)]
+    [ProvideOptionPage(typeof(ExtensionsCfg), "Format Document On Save", "Extensions Cfg", 0, 0, true)]
     public sealed class FormatDocumentOnSavePackage : Package
     {
         private FormatDocumentOnBeforeSave plugin;
@@ -40,11 +42,35 @@ namespace Elders.VSE_FormatDocumentOnSave
             var dte = (DTE)GetService(typeof(DTE));
 
             var runningDocumentTable = new RunningDocumentTable(this);
-            var documentFormatService = new DocumentFormatService(dte);
+            var documentFormatService = new DocumentFormatService(dte, () => (ExtensionsCfg)GetDialogPage(typeof(ExtensionsCfg)));
             plugin = new FormatDocumentOnBeforeSave(dte, runningDocumentTable, documentFormatService);
             runningDocumentTable.Advise(plugin);
 
             base.Initialize();
+        }
+    }
+
+    public class ExtensionsCfg : DialogPage
+    {
+        string allowed = ".*";
+        string denied = "";
+
+        [Category("Format Document On Save")]
+        [DisplayName("Allowed extensions")]
+        [Description("Space separated list. For example: .cs .html .cshtml .vb")]
+        public string Allowed
+        {
+            get { return allowed; }
+            set { allowed = value; }
+        }
+
+        [Category("Format Document On Save")]
+        [DisplayName("Denied extensions")]
+        [Description("Space separated list. For example: .cs .html .cshtml .vb")]
+        public string Denied
+        {
+            get { return denied; }
+            set { denied = value; }
         }
     }
 }

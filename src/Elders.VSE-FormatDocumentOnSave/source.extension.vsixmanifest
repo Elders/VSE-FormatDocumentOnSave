@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="2f4fac85-be4e-4d7a-8c74-93cc4389b427" Version="1.9" Language="en-US" Publisher="Elders" />
+    <Identity Id="2f4fac85-be4e-4d7a-8c74-93cc4389b427" Version="1.10" Language="en-US" Publisher="Elders" />
     <DisplayName>Format document on Save</DisplayName>
     <Description xml:space="preserve">Enables auto formatting of the code when you save a file. Visual Studio supports auto formatting of the code with the CTRL+E,D or CTRL+E,F key shortcuts but with this extension the command 'Format Document' is executed on Save.
 

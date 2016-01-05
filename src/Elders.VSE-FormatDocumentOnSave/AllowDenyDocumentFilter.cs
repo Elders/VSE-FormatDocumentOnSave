@@ -18,8 +18,8 @@ namespace Elders.VSE_FormatDocumentOnSave
 
         public AllowDenyDocumentFilter(IEnumerable<string> allowedExtensions, IEnumerable<string> deniedExtensions)
         {
-            allowedExtensions = allowedExtensions.Where(x => x.Equals(".*") == false);
-            deniedExtensions = deniedExtensions.Where(x => x.Equals(".*") == false);
+            allowedExtensions = allowedExtensions.Where(x => x.Equals(".*") == false && string.IsNullOrEmpty(x) == false);
+            deniedExtensions = deniedExtensions.Where(x => x.Equals(".*") == false && string.IsNullOrEmpty(x) == false);
 
             if (allowedExtensions.Count() > 0)
             {
