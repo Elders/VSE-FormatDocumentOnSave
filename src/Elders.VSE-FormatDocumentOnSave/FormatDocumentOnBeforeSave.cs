@@ -10,9 +10,9 @@ namespace Elders.VSE_FormatDocumentOnSave
     {
         private readonly DTE _dte;
         private readonly RunningDocumentTable _runningDocumentTable;
-        private readonly DocumentFormatter _documentFormatter;
+        private readonly DocumentFormatService _documentFormatter;
 
-        public FormatDocumentOnBeforeSave(DTE dte, RunningDocumentTable runningDocumentTable, DocumentFormatter documentFormatter)
+        public FormatDocumentOnBeforeSave(DTE dte, RunningDocumentTable runningDocumentTable, DocumentFormatService documentFormatter)
         {
             _runningDocumentTable = runningDocumentTable;
             _documentFormatter = documentFormatter;
@@ -26,7 +26,7 @@ namespace Elders.VSE_FormatDocumentOnSave
             if (document == null)
                 return VSConstants.S_OK;
 
-            _documentFormatter.FormatDocuments(new[] { document });
+            _documentFormatter.FormatDocument(document);
 
             return VSConstants.S_OK;
         }

@@ -141,9 +141,12 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DocumentFormatter.cs" />
+    <Compile Include="AllowDenyDocumentFilter.cs" />
+    <Compile Include="DocumentFormatService.cs" />
     <Compile Include="FormatDocumentOnBeforeSave.cs" />
     <Compile Include="Guids.cs" />
+    <Compile Include="IDocumentFilter.cs" />
+    <Compile Include="IDocumentFormatter.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -152,6 +155,8 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="FormatDocumentOnSavePackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VisualStudioCommand.cs" />
+    <Compile Include="VisualStudioCommandFormatter.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">

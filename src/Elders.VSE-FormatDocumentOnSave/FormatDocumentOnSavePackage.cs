@@ -1,7 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.TextManager.Interop;
 
 namespace Elders.VSE_FormatDocumentOnSave
 {
@@ -40,10 +39,9 @@ namespace Elders.VSE_FormatDocumentOnSave
         {
             var dte = (DTE)GetService(typeof(DTE));
 
-            var txtMgr = (IVsTextManager)GetService(typeof(SVsTextManager));
             var runningDocumentTable = new RunningDocumentTable(this);
-            var documentFormatter = new DocumentFormatter(txtMgr, dte);
-            plugin = new FormatDocumentOnBeforeSave(dte, runningDocumentTable, documentFormatter);
+            var documentFormatService = new DocumentFormatService(dte);
+            plugin = new FormatDocumentOnBeforeSave(dte, runningDocumentTable, documentFormatService);
             runningDocumentTable.Advise(plugin);
 
             base.Initialize();
