@@ -26,7 +26,7 @@ namespace Elders.VSE_FormatDocumentOnSave
                 isAllowed = doc => allowedExtensions.Any(ext => doc.FullName.EndsWith(ext, true, CultureInfo.InvariantCulture));
             }
             else if (deniedExtensions.Count() > 0)
-                isAllowed = doc => deniedExtensions.Any(ext => doc.FullName.EndsWith(ext, true, CultureInfo.InvariantCulture) == false);
+                isAllowed = doc => deniedExtensions.Any(ext => doc.FullName.EndsWith(ext, true, CultureInfo.InvariantCulture)) == false;
         }
 
         public bool IsAllowed(Document document)
