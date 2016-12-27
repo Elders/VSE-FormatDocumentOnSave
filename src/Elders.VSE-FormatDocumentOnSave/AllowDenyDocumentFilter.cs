@@ -23,10 +23,10 @@ namespace Elders.VSE_FormatDocumentOnSave
 
             if (allowedExtensions.Count() > 0)
             {
-                isAllowed = doc => allowedExtensions.Any(ext => doc.FullName.EndsWith(ext, true, CultureInfo.InvariantCulture));
+                isAllowed = doc => allowedExtensions.Any(ext => doc.FullName.EndsWith(ext, StringComparison.OrdinalIgnoreCase));
             }
             else if (deniedExtensions.Count() > 0)
-                isAllowed = doc => deniedExtensions.Any(ext => doc.FullName.EndsWith(ext, true, CultureInfo.InvariantCulture)) == false;
+                isAllowed = doc => deniedExtensions.Any(ext => doc.FullName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)) == false;
         }
 
         public bool IsAllowed(Document document)
