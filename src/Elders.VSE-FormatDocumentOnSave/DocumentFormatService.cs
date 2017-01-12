@@ -6,26 +6,25 @@ namespace Elders.VSE_FormatDocumentOnSave
     public class DocumentFormatService
     {
         readonly DTE dte;
-        readonly Func<ExtensionsCfg> getExtensionCfg;
+        readonly Func<GeneralCfg> getGeneralCfg;
         readonly IDocumentFormatter formatter;
 
-        public DocumentFormatService(DTE dte, Func<ExtensionsCfg> getExtensionCfg)
+        public DocumentFormatService(DTE dte, Func<GeneralCfg> getGeneralCfg)
         {
             this.dte = dte;
-            this.getExtensionCfg = getExtensionCfg;
+            this.getGeneralCfg = getGeneralCfg;
 
-            var formatCmd = new VisualStudioCommand("Edit.FormatDocument");
-            formatter = new VisualStudioCommandFormatter(dte, formatCmd);
+            formatter = new VisualStudioCommandFormatter(dte);
         }
 
         public void FormatDocument(Document doc)
         {
             try
             {
-                var cfg = getExtensionCfg();
+                var cfg = getGeneralCfg();
                 var filter = new AllowDenyDocumentFilter(cfg.Allowed.Split(' '), cfg.Denied.Split(' '));
 
-                formatter.Format(doc, filter);
+                formatter.Format(doc, filter, cfg.Command);
             }
             catch (Exception) { }   // Do not do anything here on purpose.
         }

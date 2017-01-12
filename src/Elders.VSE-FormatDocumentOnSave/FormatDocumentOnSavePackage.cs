@@ -19,7 +19,7 @@ namespace Elders.VSE_FormatDocumentOnSave
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // This attribute is used to register the information needed to show this package in the Help/About dialog of Visual Studio.
     [ProvideAutoLoad("{f1536ef8-92ec-443c-9ed7-fdadf150da82}")] //To set the UI context to autoload a VSPackage
     [Guid(GuidList.guidVSPackage2PkgString)]
-    [ProvideOptionPage(typeof(ExtensionsCfg), "Format Document On Save", "Extensions Cfg", 0, 0, true)]
+    [ProvideOptionPage(typeof(GeneralCfg), "Format Document On Save", "General", 0, 0, true)]
     public sealed class FormatDocumentOnSavePackage : Package
     {
         private FormatDocumentOnBeforeSave plugin;
@@ -42,7 +42,7 @@ namespace Elders.VSE_FormatDocumentOnSave
             var dte = (DTE)GetService(typeof(DTE));
 
             var runningDocumentTable = new RunningDocumentTable(this);
-            var documentFormatService = new DocumentFormatService(dte, () => (ExtensionsCfg)GetDialogPage(typeof(ExtensionsCfg)));
+            var documentFormatService = new DocumentFormatService(dte, () => (GeneralCfg)GetDialogPage(typeof(GeneralCfg)));
             plugin = new FormatDocumentOnBeforeSave(dte, runningDocumentTable, documentFormatService);
             runningDocumentTable.Advise(plugin);
 
@@ -50,10 +50,11 @@ namespace Elders.VSE_FormatDocumentOnSave
         }
     }
 
-    public class ExtensionsCfg : DialogPage
+    public class GeneralCfg : DialogPage
     {
         string allowed = ".*";
         string denied = "";
+        string command = "";
 
         [Category("Format Document On Save")]
         [DisplayName("Allowed extensions")]
@@ -71,6 +72,15 @@ namespace Elders.VSE_FormatDocumentOnSave
         {
             get { return denied; }
             set { denied = value; }
+        }
+
+        [Category("Format Document On Save")]
+        [DisplayName("Command")]
+        [Description("The Visual Studio command to execute. Defaults to format document (Edit.FormatDocument)")]
+        public string Command
+        {
+            get { return command; }
+            set { command = value; }
         }
     }
 }

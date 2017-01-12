@@ -5,19 +5,18 @@ namespace Elders.VSE_FormatDocumentOnSave
 {
     public class VisualStudioCommandFormatter : IDocumentFormatter
     {
-        readonly VisualStudioCommand cmd;
+        const string defaultCommand = "Edit.FormatDocument";
+
         readonly DTE dte;
 
-        public VisualStudioCommandFormatter(DTE dte, VisualStudioCommand cmd)
+        public VisualStudioCommandFormatter(DTE dte)
         {
             if (ReferenceEquals(null, dte)) throw new ArgumentNullException(nameof(dte));
-            if (ReferenceEquals(null, cmd)) throw new ArgumentNullException(nameof(cmd));
 
             this.dte = dte;
-            this.cmd = cmd;
         }
 
-        public void Format(Document document, IDocumentFilter filter)
+        public void Format(Document document, IDocumentFilter filter, string command)
         {
             var currentDoc = dte.ActiveDocument;
 
@@ -25,8 +24,12 @@ namespace Elders.VSE_FormatDocumentOnSave
 
             if (dte.ActiveWindow.Kind == "Document")
             {
+                if (string.IsNullOrEmpty(command))
+                {
+                    command = defaultCommand;
+                }
                 if (filter.IsAllowed(document))
-                    dte.ExecuteCommand(cmd.Command, cmd.Arguments);
+                    dte.ExecuteCommand(command, string.Empty);
             }
 
             currentDoc.Activate();
