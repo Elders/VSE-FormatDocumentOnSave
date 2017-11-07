@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using System.ComponentModel;
 
 namespace Elders.VSE_FormatDocumentOnSave
@@ -17,8 +18,15 @@ namespace Elders.VSE_FormatDocumentOnSave
     /// </summary>
     [PackageRegistration(UseManagedResourcesOnly = true)]   // This attribute tells the PkgDef creation utility (CreatePkgDef.exe) that this class is a package.
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // This attribute is used to register the information needed to show this package in the Help/About dialog of Visual Studio.
-    [ProvideAutoLoad("{f1536ef8-92ec-443c-9ed7-fdadf150da82}")] //To set the UI context to autoload a VSPackage
-    [Guid(GuidList.guidVSPackage2PkgString)]
+																				
+	//Set the UI context to autoload a VSPackage.																				
+	//Needs to autoload in multiple scenarios to support multiple Visual Studio configurations (ex. Folder View). 
+	[ProvideAutoLoad(UIContextGuids80.NoSolution)]
+	[ProvideAutoLoad(UIContextGuids80.SolutionExists)]
+	[ProvideAutoLoad(UIContextGuids80.SolutionHasSingleProject)]
+	[ProvideAutoLoad(UIContextGuids80.SolutionHasMultipleProjects)]
+
+	[Guid(GuidList.guidVSPackage2PkgString)]
     [ProvideOptionPage(typeof(GeneralCfg), "Format Document On Save", "General", 0, 0, true)]
     public sealed class FormatDocumentOnSavePackage : Package
     {
