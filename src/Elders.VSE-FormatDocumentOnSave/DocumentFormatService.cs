@@ -6,10 +6,10 @@ namespace Elders.VSE_FormatDocumentOnSave
     public class DocumentFormatService
     {
         readonly DTE dte;
-        readonly Func<GeneralCfg> getGeneralCfg;
+        readonly Func<Document, IConfiguration> getGeneralCfg;
         readonly IDocumentFormatter formatter;
 
-        public DocumentFormatService(DTE dte, Func<GeneralCfg> getGeneralCfg)
+        public DocumentFormatService(DTE dte, Func<Document, IConfiguration> getGeneralCfg)
         {
             this.dte = dte;
             this.getGeneralCfg = getGeneralCfg;
@@ -21,8 +21,8 @@ namespace Elders.VSE_FormatDocumentOnSave
         {
             try
             {
-                var cfg = getGeneralCfg();
-                var filter = new AllowDenyDocumentFilter(cfg.Allowed.Split(' '), cfg.Denied.Split(' '));
+                var cfg = getGeneralCfg(doc);
+                var filter = new AllowDenyDocumentFilter(cfg.Allowed, cfg.Denied);
 
                 formatter.Format(doc, filter, cfg.Command);
             }

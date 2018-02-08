@@ -3,6 +3,10 @@ using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.ComponentModel;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using EditorConfig.Core;
 
 namespace Elders.VSE_FormatDocumentOnSave
 {
@@ -18,16 +22,16 @@ namespace Elders.VSE_FormatDocumentOnSave
     /// </summary>
     [PackageRegistration(UseManagedResourcesOnly = true)]   // This attribute tells the PkgDef creation utility (CreatePkgDef.exe) that this class is a package.
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // This attribute is used to register the information needed to show this package in the Help/About dialog of Visual Studio.
-																				
-	//Set the UI context to autoload a VSPackage.																				
-	//Needs to autoload in multiple scenarios to support multiple Visual Studio configurations (ex. Folder View). 
-	[ProvideAutoLoad(UIContextGuids80.NoSolution)]
-	[ProvideAutoLoad(UIContextGuids80.SolutionExists)]
-	[ProvideAutoLoad(UIContextGuids80.SolutionHasSingleProject)]
-	[ProvideAutoLoad(UIContextGuids80.SolutionHasMultipleProjects)]
 
-	[Guid(GuidList.guidVSPackage2PkgString)]
-    [ProvideOptionPage(typeof(GeneralCfg), "Format Document On Save", "General", 0, 0, true)]
+    //Set the UI context to autoload a VSPackage.																				
+    //Needs to autoload in multiple scenarios to support multiple Visual Studio configurations (ex. Folder View). 
+    [ProvideAutoLoad(UIContextGuids80.NoSolution)]
+    [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
+    [ProvideAutoLoad(UIContextGuids80.SolutionHasSingleProject)]
+    [ProvideAutoLoad(UIContextGuids80.SolutionHasMultipleProjects)]
+
+    [Guid(GuidList.guidVSPackage2PkgString)]
+    [ProvideOptionPage(typeof(VisualStudioConfiguration), "Format Document On Save", "General", 0, 0, true)]
     public sealed class FormatDocumentOnSavePackage : Package
     {
         private FormatDocumentOnBeforeSave plugin;
@@ -50,7 +54,9 @@ namespace Elders.VSE_FormatDocumentOnSave
             var dte = (DTE)GetService(typeof(DTE));
 
             var runningDocumentTable = new RunningDocumentTable(this);
-            var documentFormatService = new DocumentFormatService(dte, () => (GeneralCfg)GetDialogPage(typeof(GeneralCfg)));
+            var defaultConfig = (VisualStudioConfiguration)GetDialogPage(typeof(VisualStudioConfiguration));
+
+            var documentFormatService = new DocumentFormatService(dte, (doc) => new FormatDocumentConfiguration(doc, defaultConfig));
             plugin = new FormatDocumentOnBeforeSave(dte, runningDocumentTable, documentFormatService);
             runningDocumentTable.Advise(plugin);
 
@@ -58,7 +64,102 @@ namespace Elders.VSE_FormatDocumentOnSave
         }
     }
 
-    public class GeneralCfg : DialogPage
+    public class FormatDocumentConfiguration : IConfiguration
+    {
+        private readonly IConfiguration configuration;
+
+        public FormatDocumentConfiguration(Document doc, IConfiguration defaultCfg)
+        {
+            configuration = defaultCfg;
+
+            FileInfo cfgFile = new FileInfo(Path.Combine(doc.Path, ".formatconfig"));
+            var dir = new DirectoryInfo(doc.Path);
+            while (dir.Parent != null)
+            {
+                if (cfgFile.Exists) break;
+
+                var configs = dir.GetFiles(".formatconfig");
+                if (configs.Length > 0)
+                {
+                    cfgFile = configs[0];
+                    break;
+                }
+                else
+                {
+                    dir = dir.Parent;
+                }
+            }
+
+            if (cfgFile.Exists)
+                configuration = new EditorConfigConfiguration(cfgFile.FullName);
+        }
+
+        public IEnumerable<string> Allowed => configuration.Allowed;
+
+        public IEnumerable<string> Denied => configuration.Denied;
+
+        public string Command => configuration.Command;
+    }
+
+    public interface IConfiguration
+    {
+        /// <summary>
+        /// Allowed extensions. For example: .cs .html .cshtml .vb
+        /// </summary>
+        IEnumerable<string> Allowed { get; }
+
+        /// <summary>
+        /// Denied filed extentions. For example: .cs .html .cshtml .vb
+        /// </summary>
+        IEnumerable<string> Denied { get; }
+
+        /// <summary>
+        /// The Visual Studio command to execute. Defaults to format document (Edit.FormatDocument)
+        /// </summary>
+        string Command { get; }
+    }
+
+    public class EditorConfigConfiguration : IConfiguration
+    {
+        string allowed = ".*";
+        string denied = "";
+        string command = "";
+
+        public EditorConfigConfiguration(string formatConfigFile)
+        {
+            var parser = new EditorConfig.Core.EditorConfigParser(formatConfigFile);
+            FileConfiguration configFile = parser.Parse(formatConfigFile).First();
+
+            if (configFile.Properties.ContainsKey("allowed_extensions"))
+                configFile.Properties.TryGetValue("allowed_extensions", out allowed);
+
+            if (configFile.Properties.ContainsKey("denied_extensions"))
+                configFile.Properties.TryGetValue("denied_extensions", out denied);
+
+            if (configFile.Properties.ContainsKey("command"))
+                configFile.Properties.TryGetValue("command", out command);
+        }
+
+        IEnumerable<string> IConfiguration.Allowed
+        {
+            get
+            {
+                return allowed.Split(' ');
+            }
+        }
+
+        IEnumerable<string> IConfiguration.Denied
+        {
+            get
+            {
+                return denied.Split(' ');
+            }
+        }
+
+        public string Command => command;
+    }
+
+    public class VisualStudioConfiguration : DialogPage, IConfiguration
     {
         string allowed = ".*";
         string denied = "";
@@ -89,6 +190,22 @@ namespace Elders.VSE_FormatDocumentOnSave
         {
             get { return command; }
             set { command = value; }
+        }
+
+        IEnumerable<string> IConfiguration.Allowed
+        {
+            get
+            {
+                return Allowed.Split(' ');
+            }
+        }
+
+        IEnumerable<string> IConfiguration.Denied
+        {
+            get
+            {
+                return Denied.Split(' ');
+            }
         }
     }
 }
