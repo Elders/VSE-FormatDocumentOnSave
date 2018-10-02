@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using EditorConfig.Core;
+using System;
 
 namespace Elders.VSE_FormatDocumentOnSave
 {
@@ -123,7 +124,7 @@ namespace Elders.VSE_FormatDocumentOnSave
     {
         string allowed = ".*";
         string denied = "";
-        string command = "";
+        string command = "Edit.FormatDocument";
 
         public EditorConfigConfiguration(string formatConfigFile)
         {
@@ -163,11 +164,11 @@ namespace Elders.VSE_FormatDocumentOnSave
     {
         string allowed = ".*";
         string denied = "";
-        string command = "";
+        string command = "Edit.FormatDocument";
 
         [Category("Format Document On Save")]
         [DisplayName("Allowed extensions")]
-        [Description("Space separated list. For example: .cs .html .cshtml .vb")]
+        [Description("Space separated list. For example: [.cs .html .cshtml .vb] Overrides extensions listed in Denied section. When you use [.*] the extensions listed in Denied section will be ignored. Empty value respects all extensions listed in Denied section.")]
         public string Allowed
         {
             get { return allowed; }
@@ -176,7 +177,7 @@ namespace Elders.VSE_FormatDocumentOnSave
 
         [Category("Format Document On Save")]
         [DisplayName("Denied extensions")]
-        [Description("Space separated list. For example: .cs .html .cshtml .vb")]
+        [Description("Space separated list. For example: [.cs .html .cshtml .vb]")]
         public string Denied
         {
             get { return denied; }
@@ -185,7 +186,7 @@ namespace Elders.VSE_FormatDocumentOnSave
 
         [Category("Format Document On Save")]
         [DisplayName("Command")]
-        [Description("The Visual Studio command to execute. Defaults to format document (Edit.FormatDocument)")]
+        [Description("The Visual Studio command to execute. Defaults to VS command [Edit.FormatDocument]")]
         public string Command
         {
             get { return command; }
