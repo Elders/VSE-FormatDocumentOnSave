@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elders.VSE-FormatDocumentOnSave", "Elders.VSE-FormatDocumentOnSave\Elders.VSE-FormatDocumentOnSave.csproj", "{3F4BBF49-B61A-4DD9-8057-EADBECE02EE6}"
 EndProject
@@ -18,5 +18,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {074EA013-1445-477D-9A32-A684CE0E3553}
 	EndGlobalSection
 EndGlobal
