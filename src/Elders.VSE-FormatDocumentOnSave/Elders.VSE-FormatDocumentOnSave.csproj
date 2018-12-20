@@ -148,6 +148,12 @@
   <ItemGroup>
     <Compile Include="AllowDenyDocumentFilter.cs" />
     <Compile Include="AsyncPackageHelpers.cs" />
+    <Compile Include="Configurations\VisualStudioConfiguration.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Configurations\EditorConfigConfiguration.cs" />
+    <Compile Include="Configurations\FormatDocumentConfiguration.cs" />
+    <Compile Include="Configurations\IConfiguration.cs" />
     <Compile Include="DocumentFormatService.cs" />
     <Compile Include="FormatDocumentOnBeforeSave.cs" />
     <Compile Include="Guids.cs" />
@@ -187,6 +193,7 @@
   <ItemGroup>
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>

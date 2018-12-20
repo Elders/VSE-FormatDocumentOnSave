@@ -1,4 +1,5 @@
 using System;
+using Elders.VSE_FormatDocumentOnSave.Configurations;
 using EnvDTE;
 
 namespace Elders.VSE_FormatDocumentOnSave

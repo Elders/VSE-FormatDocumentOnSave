@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Elders.VSE_FormatDocumentOnSave
 {
-    public static class AsyncPackageHelpers
+    public static class AsyncPackageHelperExtensions
     {
         /// <summary>
         /// Helper method to use async/await with IAsyncServiceProvider implementation
