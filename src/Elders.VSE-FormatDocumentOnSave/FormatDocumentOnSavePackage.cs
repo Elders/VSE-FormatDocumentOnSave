@@ -33,8 +33,9 @@ namespace Elders.VSE_FormatDocumentOnSave
 
     [Guid(GuidList.guidVSPackage2PkgString)]
     [ProvideOptionPage(typeof(VisualStudioConfiguration), "Format Document On Save", "General", 0, 0, true)]
-    public sealed class FormatDocumentOnSavePackage : Package
+    public sealed class FormatDocumentOnSavePackage : Package, IAsyncLoadablePackageInitialize
     {
+        private bool isAsyncLoadSupported;
         private FormatDocumentOnBeforeSave plugin;
 
         /// <summary>
@@ -52,16 +53,44 @@ namespace Elders.VSE_FormatDocumentOnSave
         /// </summary>
         protected override void Initialize()
         {
-            var dte = (DTE)GetService(typeof(DTE));
+            isAsyncLoadSupported = this.IsAsyncPackageSupported();
 
-            var runningDocumentTable = new RunningDocumentTable(this);
-            var defaultConfig = (VisualStudioConfiguration)GetDialogPage(typeof(VisualStudioConfiguration));
+            // Only perform initialization if async package framework is not supported
+            if (!isAsyncLoadSupported)
+            {
+                var dte = (DTE)GetService(typeof(DTE));
 
-            var documentFormatService = new DocumentFormatService(dte, (doc) => new FormatDocumentConfiguration(doc, defaultConfig));
-            plugin = new FormatDocumentOnBeforeSave(dte, runningDocumentTable, documentFormatService);
-            runningDocumentTable.Advise(plugin);
+                var runningDocumentTable = new RunningDocumentTable(this);
+                var defaultConfig = (VisualStudioConfiguration)GetDialogPage(typeof(VisualStudioConfiguration));
+
+                var documentFormatService = new DocumentFormatService(dte, (doc) => new FormatDocumentConfiguration(doc, defaultConfig));
+                plugin = new FormatDocumentOnBeforeSave(dte, runningDocumentTable, documentFormatService);
+                runningDocumentTable.Advise(plugin);
+            }
 
             base.Initialize();
+        }
+
+        public IVsTask Initialize(IAsyncServiceProvider pServiceProvider, IProfferAsyncService pProfferService, IAsyncProgressCallback pProgressCallback)
+        {
+            if (!isAsyncLoadSupported)
+            {
+                throw new InvalidOperationException("Async Initialize method should not be called when async load is not supported.");
+            }
+
+            return ThreadHelper.JoinableTaskFactory.RunAsync<object>(async () =>
+            {
+                var dte = await pServiceProvider.GetServiceAsync<DTE>(typeof(DTE));
+
+                var runningDocumentTable = new RunningDocumentTable(this);
+                var defaultConfig = (VisualStudioConfiguration)GetDialogPage(typeof(VisualStudioConfiguration));
+
+                var documentFormatService = new DocumentFormatService(dte, (doc) => new FormatDocumentConfiguration(doc, defaultConfig));
+                plugin = new FormatDocumentOnBeforeSave(dte, runningDocumentTable, documentFormatService);
+                runningDocumentTable.Advise(plugin);
+
+                return null;
+            }).AsVsTask();
         }
     }
 
