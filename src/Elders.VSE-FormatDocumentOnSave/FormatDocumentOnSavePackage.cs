@@ -8,6 +8,8 @@ using System.IO;
 using System.Linq;
 using EditorConfig.Core;
 using System;
+using Microsoft.VisualStudio;
+using Elders.VSE_FormatDocumentOnSave.Configurations;
 
 namespace Elders.VSE_FormatDocumentOnSave
 {
@@ -33,8 +35,9 @@ namespace Elders.VSE_FormatDocumentOnSave
 
     [Guid(GuidList.guidVSPackage2PkgString)]
     [ProvideOptionPage(typeof(VisualStudioConfiguration), "Format Document On Save", "General", 0, 0, true)]
-    public sealed class FormatDocumentOnSavePackage : Package
+    public sealed class FormatDocumentOnSavePackage : Package, IAsyncLoadablePackageInitialize
     {
+        private bool isAsyncLoadSupported;
         private FormatDocumentOnBeforeSave plugin;
 
         /// <summary>
@@ -52,161 +55,46 @@ namespace Elders.VSE_FormatDocumentOnSave
         /// </summary>
         protected override void Initialize()
         {
-            var dte = (DTE)GetService(typeof(DTE));
+            isAsyncLoadSupported = this.IsAsyncPackageSupported();
 
-            var runningDocumentTable = new RunningDocumentTable(this);
-            var defaultConfig = (VisualStudioConfiguration)GetDialogPage(typeof(VisualStudioConfiguration));
+            // Only perform initialization if async package framework is not supported
+            if (!isAsyncLoadSupported)
+            {
+                var dte = (DTE)GetService(typeof(DTE));
 
-            var documentFormatService = new DocumentFormatService(dte, (doc) => new FormatDocumentConfiguration(doc, defaultConfig));
-            plugin = new FormatDocumentOnBeforeSave(dte, runningDocumentTable, documentFormatService);
-            runningDocumentTable.Advise(plugin);
+                var runningDocumentTable = new RunningDocumentTable(this);
+                var defaultConfig = (VisualStudioConfiguration)GetDialogPage(typeof(VisualStudioConfiguration));
+
+                var documentFormatService = new DocumentFormatService(dte, (doc) => new FormatDocumentConfiguration(doc, defaultConfig));
+                plugin = new FormatDocumentOnBeforeSave(dte, runningDocumentTable, documentFormatService);
+                runningDocumentTable.Advise(plugin);
+            }
 
             base.Initialize();
         }
-    }
 
-    public class FormatDocumentConfiguration : IConfiguration
-    {
-        private readonly IConfiguration configuration;
-
-        public FormatDocumentConfiguration(Document doc, IConfiguration defaultCfg)
+        public IVsTask Initialize(IAsyncServiceProvider pServiceProvider, IProfferAsyncService pProfferService, IAsyncProgressCallback pProgressCallback)
         {
-            configuration = defaultCfg;
-
-            FileInfo cfgFile = new FileInfo(Path.Combine(doc.Path, ".formatconfig"));
-            var dir = new DirectoryInfo(doc.Path);
-            while (dir.Parent != null)
+            if (!isAsyncLoadSupported)
             {
-                if (cfgFile.Exists) break;
-
-                var configs = dir.GetFiles(".formatconfig");
-                if (configs.Length > 0)
-                {
-                    cfgFile = configs[0];
-                    break;
-                }
-                else
-                {
-                    dir = dir.Parent;
-                }
+                throw new InvalidOperationException("Async Initialize method should not be called when async load is not supported.");
             }
 
-            if (cfgFile.Exists)
-                configuration = new EditorConfigConfiguration(cfgFile.FullName);
+            return ThreadHelper.JoinableTaskFactory.RunAsync<object>(async () =>
+            {
+                var dte = await pServiceProvider.GetServiceAsync<DTE>(typeof(DTE));
+
+                var runningDocumentTable = new RunningDocumentTable(this);
+                var defaultConfig = (VisualStudioConfiguration)GetDialogPage(typeof(VisualStudioConfiguration));
+
+                var documentFormatService = new DocumentFormatService(dte, (doc) => new FormatDocumentConfiguration(doc, defaultConfig));
+                plugin = new FormatDocumentOnBeforeSave(dte, runningDocumentTable, documentFormatService);
+                runningDocumentTable.Advise(plugin);
+
+                return null;
+            }).AsVsTask();
         }
-
-        public IEnumerable<string> Allowed => configuration.Allowed;
-
-        public IEnumerable<string> Denied => configuration.Denied;
-
-        public string Command => configuration.Command;
     }
 
-    public interface IConfiguration
-    {
-        /// <summary>
-        /// Allowed extensions. For example: .cs .html .cshtml .vb
-        /// </summary>
-        IEnumerable<string> Allowed { get; }
 
-        /// <summary>
-        /// Denied filed extentions. For example: .cs .html .cshtml .vb
-        /// </summary>
-        IEnumerable<string> Denied { get; }
-
-        /// <summary>
-        /// The Visual Studio command to execute. Defaults to format document (Edit.FormatDocument)
-        /// </summary>
-        string Command { get; }
-    }
-
-    public class EditorConfigConfiguration : IConfiguration
-    {
-        string allowed = ".*";
-        string denied = "";
-        string command = "Edit.FormatDocument";
-
-        public EditorConfigConfiguration(string formatConfigFile)
-        {
-            var parser = new EditorConfig.Core.EditorConfigParser(formatConfigFile);
-            FileConfiguration configFile = parser.Parse(formatConfigFile).First();
-
-            if (configFile.Properties.ContainsKey("allowed_extensions"))
-                configFile.Properties.TryGetValue("allowed_extensions", out allowed);
-
-            if (configFile.Properties.ContainsKey("denied_extensions"))
-                configFile.Properties.TryGetValue("denied_extensions", out denied);
-
-            if (configFile.Properties.ContainsKey("command"))
-                configFile.Properties.TryGetValue("command", out command);
-        }
-
-        IEnumerable<string> IConfiguration.Allowed
-        {
-            get
-            {
-                return allowed.Split(' ');
-            }
-        }
-
-        IEnumerable<string> IConfiguration.Denied
-        {
-            get
-            {
-                return denied.Split(' ');
-            }
-        }
-
-        public string Command => command;
-    }
-
-    public class VisualStudioConfiguration : DialogPage, IConfiguration
-    {
-        string allowed = ".*";
-        string denied = "";
-        string command = "Edit.FormatDocument";
-
-        [Category("Format Document On Save")]
-        [DisplayName("Allowed extensions")]
-        [Description("Space separated list. For example: [.cs .html .cshtml .vb] Overrides extensions listed in Denied section. When you use [.*] the extensions listed in Denied section will be ignored. Empty value respects all extensions listed in Denied section.")]
-        public string Allowed
-        {
-            get { return allowed; }
-            set { allowed = value; }
-        }
-
-        [Category("Format Document On Save")]
-        [DisplayName("Denied extensions")]
-        [Description("Space separated list. For example: [.cs .html .cshtml .vb]")]
-        public string Denied
-        {
-            get { return denied; }
-            set { denied = value; }
-        }
-
-        [Category("Format Document On Save")]
-        [DisplayName("Command")]
-        [Description("The Visual Studio command to execute. Defaults to VS command [Edit.FormatDocument]")]
-        public string Command
-        {
-            get { return command; }
-            set { command = value; }
-        }
-
-        IEnumerable<string> IConfiguration.Allowed
-        {
-            get
-            {
-                return Allowed.Split(' ');
-            }
-        }
-
-        IEnumerable<string> IConfiguration.Denied
-        {
-            get
-            {
-                return Denied.Split(' ');
-            }
-        }
-    }
 }

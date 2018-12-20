@@ -75,7 +75,6 @@ namespace Elders.VSE_FormatDocumentOnSave
             return VSConstants.S_OK;
         }
 
-
         int IVsRunningDocTableEvents2.OnAfterAttributeChangeEx(uint docCookie, uint grfAttribs, IVsHierarchy pHierOld, uint itemidOld,
             string pszMkDocumentOld, IVsHierarchy pHierNew, uint itemidNew, string pszMkDocumentNew)
         {
