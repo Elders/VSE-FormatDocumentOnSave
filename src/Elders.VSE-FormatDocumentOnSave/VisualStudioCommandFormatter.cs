@@ -11,9 +11,7 @@ namespace Elders.VSE_FormatDocumentOnSave
 
         public VisualStudioCommandFormatter(DTE dte)
         {
-            if (ReferenceEquals(null, dte)) throw new ArgumentNullException(nameof(dte));
-
-            this.dte = dte;
+            this.dte = dte ?? throw new ArgumentNullException(nameof(dte));
         }
 
         public void Format(Document document, IDocumentFilter filter, string command)

@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace Elders.VSE_FormatDocumentOnSave.Configurations
 {
-    public class EditorConfigConfiguration : IConfiguration
+    public sealed class EditorConfigConfiguration : IConfiguration
     {
-        string allowed = ".*";
-        string denied = "";
-        string command = "Edit.FormatDocument";
+        private string allowed = ".*";
+        private string denied = "";
+        private readonly string command = "Edit.FormatDocument";
 
         public EditorConfigConfiguration(string formatConfigFile)
         {

@@ -9,7 +9,7 @@ namespace Elders.VSE_FormatDocumentOnSave
 
     public class AllowDenyDocumentFilter : IDocumentFilter
     {
-        Func<Document, bool> isAllowed = doc => true;
+        private readonly Func<Document, bool> isAllowed = doc => true;
 
         /// <summary>
         /// Everything is allowed when this ctor is used.
