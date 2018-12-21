@@ -2,14 +2,10 @@
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using System.ComponentModel;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using EditorConfig.Core;
 using System;
-using Microsoft.VisualStudio;
 using Elders.VSE_FormatDocumentOnSave.Configurations;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.AsyncPackageHelpers;
 
 namespace Elders.VSE_FormatDocumentOnSave
 {
@@ -23,15 +19,14 @@ namespace Elders.VSE_FormatDocumentOnSave
     /// IVsPackage interface and uses the registration attributes defined in the framework to 
     /// register itself and its components with the shell.
     /// </summary>
-    [PackageRegistration(UseManagedResourcesOnly = true)]   // This attribute tells the PkgDef creation utility (CreatePkgDef.exe) that this class is a package.
+    //[PackageRegistration(UseManagedResourcesOnly = true)]   // This attribute tells the PkgDef creation utility (CreatePkgDef.exe) that this class is a package.
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // This attribute is used to register the information needed to show this package in the Help/About dialog of Visual Studio.
 
-    //Set the UI context to autoload a VSPackage.																				
-    //Needs to autoload in multiple scenarios to support multiple Visual Studio configurations (ex. Folder View). 
-    [ProvideAutoLoad(UIContextGuids80.NoSolution)]
-    [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
-    [ProvideAutoLoad(UIContextGuids80.SolutionHasSingleProject)]
-    [ProvideAutoLoad(UIContextGuids80.SolutionHasMultipleProjects)]
+    [Microsoft.VisualStudio.AsyncPackageHelpers.AsyncPackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
+    [Microsoft.VisualStudio.AsyncPackageHelpers.ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)]
+    [Microsoft.VisualStudio.AsyncPackageHelpers.ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string, PackageAutoLoadFlags.BackgroundLoad)]
+    [Microsoft.VisualStudio.AsyncPackageHelpers.ProvideAutoLoad(VSConstants.UICONTEXT.SolutionHasSingleProject_string, PackageAutoLoadFlags.BackgroundLoad)]
+    [Microsoft.VisualStudio.AsyncPackageHelpers.ProvideAutoLoad(VSConstants.UICONTEXT.SolutionHasMultipleProjects_string, PackageAutoLoadFlags.BackgroundLoad)]
 
     [Guid(GuidList.guidVSPackage2PkgString)]
     [ProvideOptionPage(typeof(VisualStudioConfiguration), "Format Document On Save", "General", 0, 0, true)]
@@ -95,6 +90,4 @@ namespace Elders.VSE_FormatDocumentOnSave
             }).AsVsTask();
         }
     }
-
-
 }
