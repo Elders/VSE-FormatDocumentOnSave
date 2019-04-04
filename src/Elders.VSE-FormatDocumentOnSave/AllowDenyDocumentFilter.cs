@@ -22,11 +22,16 @@ namespace Elders.VSE_FormatDocumentOnSave
                 .Except(allowedExtensions)
                 .Where(ext => ext.Equals(".*") == false && string.IsNullOrEmpty(ext) == false);
 
+            IEnumerable<string> approvedExtensions = allowedExtensions
+                .Except(deniedExtensions)
+                .Where(ext => ext.Equals(".*") == false && string.IsNullOrEmpty(ext) == false);
+
             bool areAllExtensionsAllowed = allowedExtensions.Where(ext => ext.Equals(".*")).Any();
             bool areAllExtensionsDenied = deniedExtensions.Where(ext => ext.Equals(".*")).Any();
 
             isAllowed = doc =>
                 areAllExtensionsAllowed ||
+                approvedExtensions.Any(ext => doc.FullName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)) ||
                 (bannedExtensions.Any(ext => doc.FullName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)) == false && areAllExtensionsDenied == false);
         }
 
