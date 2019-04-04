@@ -47,9 +47,21 @@ Specifies all file extensions where the `command` is NOT allowed to be executed.
 
 ## Scenario 4
 - `allowed_extensions = .cs`
-- `denied_extensions = ` 
+- `denied_extensions = .*` 
 
 **Result:** Only documents with `.cs` extension will be formatted
+
+## Scenario 5
+- `allowed_extensions = .cs`
+- `denied_extensions =` 
+
+**Result:** All documents will be formatted because nothing is denied
+
+## Scenario 6
+- `allowed_extensions = .cs`
+- `denied_extensions = .cs` 
+
+**Result:** All documents will be formatted because there is a conflict 
 
 # Visual Studio
 You can configure these settings from the Visual Studio Options menu
