@@ -1,3 +1,6 @@
+# v1.23
+* Fixes a bug with the allowed/denied extensions. There are no breaking changes
+
 # v1.22
 * Re-release. Problem with the marketplace.
 
