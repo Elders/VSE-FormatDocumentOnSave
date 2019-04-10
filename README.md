@@ -12,7 +12,7 @@ There are 3 settings which you could configure:
 * Denied Extensions
 
 ### Command
-This is the Visual Studio command which will be invoked when a document is saved.
+This is the Visual Studio command which will be invoked when a document is saved. For multiple values you could use `space` separated list.
 ##### Default
 `Edit.FormatDocument`
 
