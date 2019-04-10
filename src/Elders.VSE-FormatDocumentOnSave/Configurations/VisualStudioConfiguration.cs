@@ -18,7 +18,7 @@ namespace Elders.VSE_FormatDocumentOnSave.Configurations
 
         [Category("Format Document On Save")]
         [DisplayName("Command")]
-        [Description("The Visual Studio command to execute. Defaults to VS command [Edit.FormatDocument]")]
+        [Description("Space separated list. The Visual Studio command to execute. Defaults to VS command [Edit.FormatDocument]")]
         public string Command { get; set; } = "Edit.FormatDocument";
 
         IEnumerable<string> IConfiguration.Allowed => Allowed.Split(' ');

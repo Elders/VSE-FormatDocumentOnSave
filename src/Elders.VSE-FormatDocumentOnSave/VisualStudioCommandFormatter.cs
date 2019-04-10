@@ -20,14 +20,20 @@ namespace Elders.VSE_FormatDocumentOnSave
 
             document.Activate();
 
-            if (dte.ActiveWindow.Kind == "Document")
+            if (dte.ActiveWindow.Kind == "Document" && filter.IsAllowed(document))
             {
-                if (string.IsNullOrEmpty(command))
-                {
+                if (string.IsNullOrWhiteSpace(command))
                     command = defaultCommand;
+                else
+                    command = command.Trim();
+
+                foreach (string splitCommand in command.Split(' '))
+                {
+                    if (string.IsNullOrWhiteSpace(splitCommand))
+                        continue;
+                    string commandName = splitCommand.Trim();
+                    dte.ExecuteCommand(commandName, string.Empty);
                 }
-                if (filter.IsAllowed(document))
-                    dte.ExecuteCommand(command, string.Empty);
             }
 
             currentDoc.Activate();

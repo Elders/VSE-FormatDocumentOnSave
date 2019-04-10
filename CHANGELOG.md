@@ -1,3 +1,6 @@
+# v1.24
+* [Shereef](https://github.com/Shereef) Added the ability to run mutiple commands separated with a `space`. There are no breaking changes
+
 # v1.23
 * Fixes a bug with the allowed/denied extensions. There are no breaking changes
 
