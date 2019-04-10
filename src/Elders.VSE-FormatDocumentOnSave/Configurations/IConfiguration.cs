@@ -15,8 +15,8 @@ namespace Elders.VSE_FormatDocumentOnSave.Configurations
         IEnumerable<string> Denied { get; }
 
         /// <summary>
-        /// The Visual Studio command to execute. Defaults to format document (Edit.FormatDocument)
+        /// The Visual Studio commands to execute. Defaults to format document (Edit.FormatDocument)
         /// </summary>
-        string Command { get; }
+        string Commands { get; }
     }
 }

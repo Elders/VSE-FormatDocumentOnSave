@@ -38,6 +38,6 @@ namespace Elders.VSE_FormatDocumentOnSave.Configurations
 
         public IEnumerable<string> Denied => configuration.Denied;
 
-        public string Command => configuration.Command;
+        public string Commands => configuration.Commands;
     }
 }

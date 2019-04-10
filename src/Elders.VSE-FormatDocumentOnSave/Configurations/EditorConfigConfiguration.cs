@@ -29,6 +29,6 @@ namespace Elders.VSE_FormatDocumentOnSave.Configurations
 
         IEnumerable<string> IConfiguration.Denied => denied.Split(' ');
 
-        public string Command => command;
+        public string Commands => command;
     }
 }
