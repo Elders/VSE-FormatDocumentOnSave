@@ -6,8 +6,8 @@ namespace Elders.VSE_FormatDocumentOnSave.Configurations
 {
     public sealed class EditorConfigConfiguration : IConfiguration
     {
-        private string allowed = ".*";
-        private string denied = "";
+        private readonly string allowed = ".*";
+        private readonly string denied = "";
         private readonly string command = "Edit.FormatDocument";
 
         public EditorConfigConfiguration(string formatConfigFile)

@@ -18,6 +18,9 @@ namespace Elders.VSE_FormatDocumentOnSave
 
         public void FormatDocument(Document doc)
         {
+            if (System.Windows.Forms.Control.IsKeyLocked(System.Windows.Forms.Keys.CapsLock))
+                return;
+
             try
             {
                 var cfg = getGeneralCfg(doc);
