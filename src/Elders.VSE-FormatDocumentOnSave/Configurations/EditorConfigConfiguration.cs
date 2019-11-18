@@ -9,6 +9,7 @@ namespace Elders.VSE_FormatDocumentOnSave.Configurations
         private readonly string allowed = ".*";
         private readonly string denied = "";
         private readonly string command = "Edit.FormatDocument";
+        private readonly bool enableInDebug = false;
 
         public EditorConfigConfiguration(string formatConfigFile)
         {
@@ -23,6 +24,13 @@ namespace Elders.VSE_FormatDocumentOnSave.Configurations
 
             if (configFile.Properties.ContainsKey("command"))
                 configFile.Properties.TryGetValue("command", out command);
+
+            string enableInDebugAsString;
+            if (configFile.Properties.ContainsKey("enable_in_debug"))
+            {
+                configFile.Properties.TryGetValue("enable_in_debug", out enableInDebugAsString);
+                bool.TryParse(enableInDebugAsString, out enableInDebug);
+            }
         }
 
         IEnumerable<string> IConfiguration.Allowed => allowed.Split(' ');
@@ -30,5 +38,7 @@ namespace Elders.VSE_FormatDocumentOnSave.Configurations
         IEnumerable<string> IConfiguration.Denied => denied.Split(' ');
 
         public string Commands => command;
+
+        public bool EnableInDebug => enableInDebug;
     }
 }

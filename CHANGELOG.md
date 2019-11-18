@@ -1,3 +1,6 @@
+# v2.0
+* From v2.0, by default the extension is disabled while in a debug session. You could change that from the configuration.
+
 # v1.25
 * Disables document formatting if the CapsLock is turned on
 

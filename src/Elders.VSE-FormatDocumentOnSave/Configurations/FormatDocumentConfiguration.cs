@@ -39,5 +39,7 @@ namespace Elders.VSE_FormatDocumentOnSave.Configurations
         public IEnumerable<string> Denied => configuration.Denied;
 
         public string Commands => configuration.Commands;
+
+        public bool EnableInDebug => configuration.EnableInDebug;
     }
 }

@@ -18,5 +18,10 @@ namespace Elders.VSE_FormatDocumentOnSave.Configurations
         /// The Visual Studio commands to execute. Defaults to format document (Edit.FormatDocument)
         /// </summary>
         string Commands { get; }
+
+        /// <summary>
+        /// By default the plugin is disabled in debug mode. You could explicitly configure to have the extension enabled while in a debug session.
+        /// </summary>
+        bool EnableInDebug { get; }
     }
 }

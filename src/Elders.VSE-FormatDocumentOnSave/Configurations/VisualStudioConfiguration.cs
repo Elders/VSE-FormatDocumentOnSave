@@ -21,6 +21,11 @@ namespace Elders.VSE_FormatDocumentOnSave.Configurations
         [Description("Space separated list. The Visual Studio command to execute. Defaults to VS command [Edit.FormatDocument]")]
         public string Commands { get; set; } = "Edit.FormatDocument";
 
+        [Category("Format Document On Save")]
+        [DisplayName("Enable in Debug")]
+        [Description("By default the plugin is disabled in debug mode. You could explicitly configure to have the extension enabled while in a debug session")]
+        public bool EnableInDebug { get; set; } = false;
+
         IEnumerable<string> IConfiguration.Allowed => Allowed.Split(' ');
 
         IEnumerable<string> IConfiguration.Denied => Denied.Split(' ');

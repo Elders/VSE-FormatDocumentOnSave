@@ -6,11 +6,13 @@ namespace Elders.VSE_FormatDocumentOnSave
 {
     public class DocumentFormatService
     {
+        private readonly DTE dte;
         readonly Func<Document, IConfiguration> getGeneralCfg;
         readonly IDocumentFormatter formatter;
 
         public DocumentFormatService(DTE dte, Func<Document, IConfiguration> getGeneralCfg)
         {
+            this.dte = dte;
             this.getGeneralCfg = getGeneralCfg;
 
             formatter = new VisualStudioCommandFormatter(dte);
@@ -18,7 +20,7 @@ namespace Elders.VSE_FormatDocumentOnSave
 
         public void FormatDocument(Document doc)
         {
-            if (System.Windows.Forms.Control.IsKeyLocked(System.Windows.Forms.Keys.CapsLock))
+            if (ShouldFormat(doc) == false)
                 return;
 
             try
@@ -37,6 +39,19 @@ namespace Elders.VSE_FormatDocumentOnSave
                 }
             }
             catch (Exception) { }   // Do not do anything here on purpose.
+        }
+
+        private bool ShouldFormat(Document doc)
+        {
+            if (System.Windows.Forms.Control.IsKeyLocked(System.Windows.Forms.Keys.CapsLock))
+                return false;
+
+            bool vsIsInDebug = dte.Mode == vsIDEMode.vsIDEModeDebug;
+            var cfg = getGeneralCfg(doc);
+            if (vsIsInDebug == true && cfg.EnableInDebug == false)
+                return false;
+
+            return true;
         }
     }
 }
