@@ -76,13 +76,15 @@ You can configure these settings from the Visual Studio Options menu
 
 Create a `.formatconfig` file in the root of your project 
 
+Note: If you have a `.formatconfig` file, the VS options are ignored!
+
 ## Example
 ```
 root = true
 
 [*.*]
 command = Edit.FormatDocument
-allowed_extensions = .*
+allowed_extensions = 
 denied_extensions = .js .html
 ```
 
@@ -93,7 +95,7 @@ root = true
 [*.*]
 
 command = Edit.FormatDocument Edit.FormatDocument
-allowed_extensions = .*
+allowed_extensions = 
 denied_extensions = .js .html
 ```
 
