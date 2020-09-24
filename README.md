@@ -106,13 +106,14 @@ By default the extension is disabled while in a debug session. You could change 
 # Contribute
 To setup development environment follow the steps:
 
-## Install `Visual Studio SDK` from Visual Studio Installer
+* Install `Visual Studio SDK` from Visual Studio Installer
 https://prnt.sc/umv2ak
 
-## Clone the project
+* Clone the project
 
-## Configure debug 
+* Configure debug 
 Open project properties and go to the `Debug` tab. Select `Start external program:` and enter the path to your Visual Studio exe. For example `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\devenv.exe`. In the `Command line arguments:` type `/rootsuffix Exp`
 https://prnt.sc/umv47r
 
-## Done
+* Debug
+When you press `F5` a new instance of Visual Studio will open. From there you need to load an exising solution, file or create a new one. When you press `ctrl` + `s` it will trigger break points you have set in the initial Visual Studio instance.
