@@ -99,6 +99,20 @@ allowed_extensions =
 denied_extensions = .js .html
 ```
 
-# Disable the extension
+## Disable the extension
 If you wish to temporarily disable to extension you could press CapsLock.  
 By default the extension is disabled while in a debug session. You could change that from the configuration.
+
+# Contribute
+To setup development environment follow the steps:
+
+## Install `Visual Studio SDK` from Visual Studio Installer
+https://prnt.sc/umv2ak
+
+## Clone the project
+
+## Configure debug 
+Open project properties and go to the `Debug` tab. Select `Start external program:` and enter the path to your Visual Studio exe. For example `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\devenv.exe`. In the `Command line arguments:` type `/rootsuffix Exp`
+https://prnt.sc/umv47r
+
+## Done
