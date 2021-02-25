@@ -83,6 +83,7 @@ Note: If you have a `.formatconfig` file, the VS options are ignored!
 root = true
 
 [*.*]
+enable = true
 command = Edit.FormatDocument
 allowed_extensions = 
 denied_extensions = .js .html
@@ -102,6 +103,7 @@ denied_extensions = .js .html
 ## Disable the extension
 If you wish to temporarily disable to extension you could press CapsLock.  
 By default the extension is disabled while in a debug session. You could change that from the configuration.
+You can enable or disable the extension in the configuration, or disable in a `.formatconfig` file.
 
 # Contribute
 To setup development environment follow the steps:

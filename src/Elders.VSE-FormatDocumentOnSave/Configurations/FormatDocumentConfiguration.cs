@@ -34,6 +34,8 @@ namespace Elders.VSE_FormatDocumentOnSave.Configurations
                 configuration = new EditorConfigConfiguration(cfgFile.FullName);
         }
 
+        public bool IsEnable => configuration.IsEnable;
+
         public IEnumerable<string> Allowed => configuration.Allowed;
 
         public IEnumerable<string> Denied => configuration.Denied;
