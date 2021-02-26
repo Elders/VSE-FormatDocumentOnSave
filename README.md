@@ -6,10 +6,11 @@ Enables auto formatting of the code when you save a file. Visual Studio supports
 https://marketplace.visualstudio.com/items?itemName=mynkow.FormatdocumentonSave
 
 # Configuration
-There are 4 settings which you could configure:
+There are 5 settings which you could configure:
 * Command
 * Allowed extensions
 * Denied Extensions
+* Enable
 * Enable in Debug
 
 ### Command
