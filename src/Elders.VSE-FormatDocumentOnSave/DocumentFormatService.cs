@@ -48,10 +48,11 @@ namespace Elders.VSE_FormatDocumentOnSave
 
             bool vsIsInDebug = dte.Mode == vsIDEMode.vsIDEModeDebug;
             var cfg = getGeneralCfg(doc);
+
             if (vsIsInDebug == true && cfg.EnableInDebug == false)
                 return false;
 
-            return true;
+            return cfg.IsEnable;
         }
     }
 }

@@ -5,6 +5,11 @@ namespace Elders.VSE_FormatDocumentOnSave.Configurations
     public interface IConfiguration
     {
         /// <summary>
+        /// Enable or disable formating on save
+        /// </summary>
+        bool IsEnable { get; }
+
+        /// <summary>
         /// Allowed extensions. For example: .cs .html .cshtml .vb
         /// </summary>
         IEnumerable<string> Allowed { get; }
