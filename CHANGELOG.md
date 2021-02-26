@@ -1,3 +1,6 @@
+# v2.1
+* [manuc66](https://github.com/manuc66) Allow to disable without restarting VS or per repository with .formatconfig
+
 # v2.0
 * From v2.0, by default the extension is disabled while in a debug session. You could change that from the configuration.
 
