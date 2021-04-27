@@ -17,6 +17,10 @@ There are 5 settings which you could configure:
 This is the Visual Studio command which will be invoked when a document is saved. For multiple values you could use `space` separated list.
 ##### Default
 `Edit.FormatDocument`
+##### CodeCleanup
+Many people were asking how to execute a CodeCleanup on save. It is possible to replace the default command with `Analyze.RunDefaultCodeCleanupOnSolution` which executes all the commands configured in the default profile.
+
+note: In rare occasions VisualStudio2019 enters in a infinite loop. A restart or extension reinstall helps. If you know how to reproduce this bug please log an issue.
 
 ### Allowed extensions
 Specifies all file extensions where the `command` is allowed to be executed. For multiple values you could use `space` separated list.
