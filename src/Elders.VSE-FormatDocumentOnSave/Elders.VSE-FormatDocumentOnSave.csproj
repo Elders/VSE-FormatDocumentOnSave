@@ -23,7 +23,7 @@
     <AssemblyName>Elders.VSE_FormatDocumentOnSave</AssemblyName>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -34,37 +34,24 @@
   </PropertyGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
+    <OutputType>Library</OutputType>
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <ItemGroup>
-    <PackageReference Include="editorconfig" Version="0.12.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime" Version="14.3.26930" />
-    <PackageReference Include="Microsoft.VisualStudio.OLE.Interop" Version="7.10.6071" />
-    <PackageReference Include="Microsoft.VisualStudio.SDK.EmbedInteropTypes" Version="15.0.27" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Immutable.10.0" Version="15.0.25415" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Immutable.11.0" Version="15.0.25415" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Immutable.12.0" Version="15.0.25415" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop" Version="7.10.6072" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.10.0" Version="10.0.30320" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.11.0" Version="11.0.61031" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.12.0" Version="12.0.30111" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.14.0.DesignTime" Version="14.3.26929" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.8.0" Version="8.0.50728" />
-    <PackageReference Include="Microsoft.VisualStudio.TextManager.Interop" Version="7.10.6071" />
-    <PackageReference Include="Microsoft.VisualStudio.TextManager.Interop.8.0" Version="8.0.50728" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="15.8.209" />
-    <PackageReference Include="EnvDTE" Version="8.0.2" />
+    <PackageReference Include="editorconfig" Version="0.12.2" />
+    <PackageReference Include="Microsoft.VisualStudio.OLE.Interop" Version="16.10.31320.204" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="16.10.31321.278" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK.EmbedInteropTypes" Version="15.0.36" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="16.10.31321.278" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.Framework" Version="16.10.31321.278" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop" Version="16.10.31320.204" />
+    <PackageReference Include="Microsoft.VisualStudio.TextManager.Interop" Version="16.10.31320.204" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.0.63" />
+    <PackageReference Include="EnvDTE" Version="16.10.31320.204" />
     <PackageReference Include="VSSDK.GraphModel" Version="12.0.4" />
     <PackageReference Include="VSSDK.IDE" Version="7.0.4" />
-    <PackageReference Include="VSSDK.IDE.10" Version="10.0.4" />
-    <PackageReference Include="VSSDK.IDE.11" Version="11.0.4" />
-    <PackageReference Include="VSSDK.IDE.12" Version="12.0.4" />
-    <PackageReference Include="VSSDK.IDE.8" Version="8.0.4" />
-    <PackageReference Include="VSSDK.IDE.9" Version="9.0.4" />
     <PackageReference Include="VSSDK.OLE.Interop" Version="7.0.4" />
-    <PackageReference Include="VSSDK.Shell.12" Version="12.0.4" />
     <PackageReference Include="VSSDK.Threading" Version="12.0.4" />
-    <PackageReference Include="VSSDK.Threading.12" Version="12.0.4" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
