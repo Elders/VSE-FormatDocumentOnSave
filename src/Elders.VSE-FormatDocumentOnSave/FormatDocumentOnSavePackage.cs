@@ -67,7 +67,7 @@ namespace Elders.VSE_FormatDocumentOnSave
             base.Initialize();
         }
 
-        public IVsTask Initialize(Microsoft.VisualStudio.Shell.Interop.IAsyncServiceProvider pServiceProvider, IProfferAsyncService pProfferService, IAsyncProgressCallback pProgressCallback)
+        public IVsTask Initialize(Microsoft.VisualStudio.Shell.Interop.COMAsyncServiceProvider.IAsyncServiceProvider pServiceProvider, IProfferAsyncService pProfferService, IAsyncProgressCallback pProgressCallback)
         {
             if (!isAsyncLoadSupported)
             {
