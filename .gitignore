@@ -110,4 +110,3 @@ UpgradeLog*.XML
 *.sln.ide/
 
 **/.*/
-!Elders.VSE-FormatDocumentOnSave.csproj.user
