@@ -1,3 +1,7 @@
+# v3.0
+* [barnuri](https://github.com/barnuri) Adds support for VisualStudio 2022
+* Going forward versions of Visual Studio prior 2022 will not be supported
+
 # v2.1
 * [manuc66](https://github.com/manuc66) Allow to disable without restarting VS or per repository with .formatconfig
 

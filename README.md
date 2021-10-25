@@ -2,8 +2,16 @@ VSE-FormatDocumentOnSave
 ========================
 Enables auto formatting of the code when you save a file. Visual Studio supports auto formatting of the code with the CTRL+E,D or CTRL+E,F key shortcuts but with this extension the command `Edit.FormatDocument` is executed on Save.
 
-# Download
-https://marketplace.visualstudio.com/items?itemName=mynkow.FormatdocumentonSave
+# Versions
+Up until now the extension supported older versions of Visual Studio (2012-2019). 
+Since Visual Studio 2022 there are a lot of breaking changes in the VSIX SDK and it is really hard to support older versions of Visual Studio. For that reason the extension is split into two:
+
+## Visual Studio 2022
+Going forward this will be the version which will be supported and maintained. If possible, future versions of Visual Studio will be supported within this package.  
+https://marketplace.visualstudio.com/items?itemName=mynkow.FormatDocumentOnSave
+
+## Visual Studio 2012-2019
+https://marketplace.visualstudio.com/items?itemName=mynkow.FormatDocumentOnSaveLegacy
 
 # Configuration
 There are 5 settings which you could configure:
