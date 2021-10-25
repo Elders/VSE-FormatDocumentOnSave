@@ -29,9 +29,8 @@ namespace Elders.VSE_FormatDocumentOnSave
 
     [Guid(GuidList.guidVSPackage2PkgString)]
     [ProvideOptionPage(typeof(VisualStudioConfiguration), "Format Document On Save", "General", 0, 0, true)]
-    public sealed class FormatDocumentOnSavePackage : Package, IAsyncLoadablePackageInitialize
+    public sealed class FormatDocumentOnSavePackage : AsyncPackage, IAsyncLoadablePackageInitialize
     {
-        private bool isAsyncLoadSupported;
         private FormatDocumentOnBeforeSave plugin;
 
         /// <summary>
@@ -43,37 +42,8 @@ namespace Elders.VSE_FormatDocumentOnSave
         /// </summary>
         public FormatDocumentOnSavePackage() { }
 
-        /// <summary>
-        /// Initialization of the package; this method is called right after the package is sited, so this is the place
-        /// where you can put all the initialization code that rely on services provided by VisualStudio.
-        /// </summary>
-        protected override void Initialize()
-        {
-            isAsyncLoadSupported = this.IsAsyncPackageSupported();
-
-            // Only perform initialization if async package framework is not supported
-            if (!isAsyncLoadSupported)
-            {
-                var dte = (DTE)GetService(typeof(DTE));
-
-                var runningDocumentTable = new RunningDocumentTable(this);
-                var defaultConfig = (VisualStudioConfiguration)GetDialogPage(typeof(VisualStudioConfiguration));
-
-                var documentFormatService = new DocumentFormatService(dte, (doc) => new FormatDocumentConfiguration(doc, defaultConfig));
-                plugin = new FormatDocumentOnBeforeSave(dte, runningDocumentTable, documentFormatService);
-                runningDocumentTable.Advise(plugin);
-            }
-
-            base.Initialize();
-        }
-
         public IVsTask Initialize(Microsoft.VisualStudio.Shell.Interop.COMAsyncServiceProvider.IAsyncServiceProvider pServiceProvider, IProfferAsyncService pProfferService, IAsyncProgressCallback pProgressCallback)
         {
-            if (!isAsyncLoadSupported)
-            {
-                throw new InvalidOperationException("Async Initialize method should not be called when async load is not supported.");
-            }
-
             return ThreadHelper.JoinableTaskFactory.RunAsync<object>(async () =>
             {
                 var dte = await pServiceProvider.GetServiceAsync<DTE>(typeof(DTE));
