@@ -1,6 +1,5 @@
 ﻿using EditorConfig.Core;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Elders.VSE_FormatDocumentOnSave.Configurations
 {
@@ -15,7 +14,7 @@ namespace Elders.VSE_FormatDocumentOnSave.Configurations
         public EditorConfigConfiguration(string formatConfigFile)
         {
             var parser = new EditorConfigParser(formatConfigFile);
-            FileConfiguration configFile = parser.Parse(formatConfigFile).First();
+            FileConfiguration configFile = parser.Parse(formatConfigFile);
 
             if (configFile.Properties.TryGetValue("enable", out string enableAsString) && bool.TryParse(enableAsString, out bool enableParsed))
                 enable = enableParsed;

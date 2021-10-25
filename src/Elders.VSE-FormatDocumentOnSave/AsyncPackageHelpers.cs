@@ -13,7 +13,7 @@ namespace Elders.VSE_FormatDocumentOnSave
         /// <param name="asyncServiceProvider">IAsyncServciceProvider instance</param>
         /// <param name="serviceType">Type of the Visual Studio service requested</param>
         /// <returns>Service object as type of T</returns>
-        public static async Task<T> GetServiceAsync<T>(this IAsyncServiceProvider asyncServiceProvider, Type serviceType) where T : class
+        public static async Task<T> GetServiceAsync<T>(this Microsoft.VisualStudio.Shell.Interop.COMAsyncServiceProvider.IAsyncServiceProvider asyncServiceProvider, Type serviceType) where T : class
         {
             T returnValue = null;
 

@@ -1,11 +1,10 @@
-﻿using System.Runtime.InteropServices;
+﻿using Elders.VSE_FormatDocumentOnSave.Configurations;
 using EnvDTE;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
-using Elders.VSE_FormatDocumentOnSave.Configurations;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.AsyncPackageHelpers;
+using System.Runtime.InteropServices;
 
 namespace Elders.VSE_FormatDocumentOnSave
 {
@@ -23,16 +22,15 @@ namespace Elders.VSE_FormatDocumentOnSave
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // This attribute is used to register the information needed to show this package in the Help/About dialog of Visual Studio.
 
     [Microsoft.VisualStudio.AsyncPackageHelpers.AsyncPackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-    [Microsoft.VisualStudio.AsyncPackageHelpers.ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)]
-    [Microsoft.VisualStudio.AsyncPackageHelpers.ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string, PackageAutoLoadFlags.BackgroundLoad)]
-    [Microsoft.VisualStudio.AsyncPackageHelpers.ProvideAutoLoad(VSConstants.UICONTEXT.SolutionHasSingleProject_string, PackageAutoLoadFlags.BackgroundLoad)]
-    [Microsoft.VisualStudio.AsyncPackageHelpers.ProvideAutoLoad(VSConstants.UICONTEXT.SolutionHasMultipleProjects_string, PackageAutoLoadFlags.BackgroundLoad)]
+    [Microsoft.VisualStudio.AsyncPackageHelpers.ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string, Microsoft.VisualStudio.AsyncPackageHelpers.PackageAutoLoadFlags.BackgroundLoad)]
+    [Microsoft.VisualStudio.AsyncPackageHelpers.ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string, Microsoft.VisualStudio.AsyncPackageHelpers.PackageAutoLoadFlags.BackgroundLoad)]
+    [Microsoft.VisualStudio.AsyncPackageHelpers.ProvideAutoLoad(VSConstants.UICONTEXT.SolutionHasSingleProject_string, Microsoft.VisualStudio.AsyncPackageHelpers.PackageAutoLoadFlags.BackgroundLoad)]
+    [Microsoft.VisualStudio.AsyncPackageHelpers.ProvideAutoLoad(VSConstants.UICONTEXT.SolutionHasMultipleProjects_string, Microsoft.VisualStudio.AsyncPackageHelpers.PackageAutoLoadFlags.BackgroundLoad)]
 
     [Guid(GuidList.guidVSPackage2PkgString)]
     [ProvideOptionPage(typeof(VisualStudioConfiguration), "Format Document On Save", "General", 0, 0, true)]
-    public sealed class FormatDocumentOnSavePackage : Package, IAsyncLoadablePackageInitialize
+    public sealed class FormatDocumentOnSavePackage : AsyncPackage, IAsyncLoadablePackageInitialize
     {
-        private bool isAsyncLoadSupported;
         private FormatDocumentOnBeforeSave plugin;
 
         /// <summary>
@@ -44,37 +42,8 @@ namespace Elders.VSE_FormatDocumentOnSave
         /// </summary>
         public FormatDocumentOnSavePackage() { }
 
-        /// <summary>
-        /// Initialization of the package; this method is called right after the package is sited, so this is the place
-        /// where you can put all the initialization code that rely on services provided by VisualStudio.
-        /// </summary>
-        protected override void Initialize()
+        public IVsTask Initialize(Microsoft.VisualStudio.Shell.Interop.COMAsyncServiceProvider.IAsyncServiceProvider pServiceProvider, IProfferAsyncService pProfferService, IAsyncProgressCallback pProgressCallback)
         {
-            isAsyncLoadSupported = this.IsAsyncPackageSupported();
-
-            // Only perform initialization if async package framework is not supported
-            if (!isAsyncLoadSupported)
-            {
-                var dte = (DTE)GetService(typeof(DTE));
-
-                var runningDocumentTable = new RunningDocumentTable(this);
-                var defaultConfig = (VisualStudioConfiguration)GetDialogPage(typeof(VisualStudioConfiguration));
-
-                var documentFormatService = new DocumentFormatService(dte, (doc) => new FormatDocumentConfiguration(doc, defaultConfig));
-                plugin = new FormatDocumentOnBeforeSave(dte, runningDocumentTable, documentFormatService);
-                runningDocumentTable.Advise(plugin);
-            }
-
-            base.Initialize();
-        }
-
-        public IVsTask Initialize(IAsyncServiceProvider pServiceProvider, IProfferAsyncService pProfferService, IAsyncProgressCallback pProgressCallback)
-        {
-            if (!isAsyncLoadSupported)
-            {
-                throw new InvalidOperationException("Async Initialize method should not be called when async load is not supported.");
-            }
-
             return ThreadHelper.JoinableTaskFactory.RunAsync<object>(async () =>
             {
                 var dte = await pServiceProvider.GetServiceAsync<DTE>(typeof(DTE));
