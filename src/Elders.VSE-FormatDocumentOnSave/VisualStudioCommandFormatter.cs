@@ -1,5 +1,6 @@
 ﻿using System;
 using EnvDTE;
+using Microsoft.VisualStudio.Shell;
 
 namespace Elders.VSE_FormatDocumentOnSave
 {
@@ -16,6 +17,8 @@ namespace Elders.VSE_FormatDocumentOnSave
 
         public void Format(Document document, IDocumentFilter filter, string command)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var currentDoc = dte.ActiveDocument;
 
             document.Activate();
@@ -26,6 +29,7 @@ namespace Elders.VSE_FormatDocumentOnSave
                 {
                     command = defaultCommand;
                 }
+
                 dte.ExecuteCommand(command, string.Empty);
             }
 

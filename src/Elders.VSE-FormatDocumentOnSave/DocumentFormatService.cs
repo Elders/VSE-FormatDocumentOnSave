@@ -1,6 +1,8 @@
 using System;
 using Elders.VSE_FormatDocumentOnSave.Configurations;
 using EnvDTE;
+using EnvDTE80;
+using Microsoft.VisualStudio.Shell;
 
 namespace Elders.VSE_FormatDocumentOnSave
 {
@@ -43,7 +45,9 @@ namespace Elders.VSE_FormatDocumentOnSave
 
         private bool ShouldFormat(Document doc)
         {
-            if (System.Windows.Forms.Control.IsKeyLocked(System.Windows.Forms.Keys.CapsLock))
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            if (doc.Saved || System.Windows.Forms.Control.IsKeyLocked(System.Windows.Forms.Keys.CapsLock))
                 return false;
 
             bool vsIsInDebug = dte.Mode == vsIDEMode.vsIDEModeDebug;

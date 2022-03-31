@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using EnvDTE;
+using Microsoft.VisualStudio.Shell;
 
 namespace Elders.VSE_FormatDocumentOnSave
 {
@@ -18,6 +19,8 @@ namespace Elders.VSE_FormatDocumentOnSave
 
         public AllowDenyDocumentFilter(IEnumerable<string> allowedExtensions, IEnumerable<string> deniedExtensions)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             IEnumerable<string> bannedExtensions = deniedExtensions
                 .Except(allowedExtensions)
                 .Where(ext => ext.Equals(".*") == false && string.IsNullOrEmpty(ext) == false);

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
@@ -19,32 +20,12 @@ namespace Elders.VSE_FormatDocumentOnSave
             _dte = dte;
         }
 
-        public int OnBeforeSave(uint docCookie)
-        {
-            var document = FindDocument(docCookie);
-
-            if (document == null)
-                return VSConstants.S_OK;
-
-            _documentFormatter.FormatDocument(document);
-
-            return VSConstants.S_OK;
-        }
-
-        private Document FindDocument(uint docCookie)
-        {
-            var documentInfo = _runningDocumentTable.GetDocumentInfo(docCookie);
-            var documentPath = documentInfo.Moniker;
-
-            return _dte.Documents.Cast<Document>().FirstOrDefault(doc => doc.FullName == documentPath);
-        }
-
-        public int OnAfterFirstDocumentLock(uint docCookie, uint dwRdtLockType, uint dwReadLocksRemaining, uint dwEditLocksRemaining)
+        public int OnAfterFirstDocumentLock(uint docCookie, uint dwRDTLockType, uint dwReadLocksRemaining, uint dwEditLocksRemaining)
         {
             return VSConstants.S_OK;
         }
 
-        public int OnBeforeLastDocumentUnlock(uint docCookie, uint dwRdtLockType, uint dwReadLocksRemaining, uint dwEditLocksRemaining)
+        public int OnBeforeLastDocumentUnlock(uint docCookie, uint dwRDTLockType, uint dwReadLocksRemaining, uint dwEditLocksRemaining)
         {
             return VSConstants.S_OK;
         }
@@ -69,16 +50,42 @@ namespace Elders.VSE_FormatDocumentOnSave
             return VSConstants.S_OK;
         }
 
-        int IVsRunningDocTableEvents3.OnAfterAttributeChangeEx(uint docCookie, uint grfAttribs, IVsHierarchy pHierOld, uint itemidOld,
-            string pszMkDocumentOld, IVsHierarchy pHierNew, uint itemidNew, string pszMkDocumentNew)
+        public int OnAfterAttributeChangeEx(uint docCookie, uint grfAttribs, IVsHierarchy pHierOld, uint itemidOld, string pszMkDocumentOld, IVsHierarchy pHierNew, uint itemidNew, string pszMkDocumentNew)
         {
             return VSConstants.S_OK;
         }
 
-        int IVsRunningDocTableEvents2.OnAfterAttributeChangeEx(uint docCookie, uint grfAttribs, IVsHierarchy pHierOld, uint itemidOld,
-            string pszMkDocumentOld, IVsHierarchy pHierNew, uint itemidNew, string pszMkDocumentNew)
+        public int OnBeforeSave(uint docCookie)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            var document = FindDocument(docCookie);
+
+            if (document == null)
+                return VSConstants.S_OK;
+
+            _documentFormatter.FormatDocument(document);
+
             return VSConstants.S_OK;
+        }
+
+        private Document FindDocument(uint docCookie)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            var documentInfo = _runningDocumentTable.GetDocumentInfo(docCookie);
+            var documentPath = documentInfo.Moniker;
+
+            return _dte.Documents.Cast<Document>().FirstOrDefault(doc =>
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+                return doc.FullName == documentPath;
+            });
+        }
+
+        public void OnAfterDocumentLockCountChanged(uint docCookie, uint dwRDTLockType, uint dwOldLockCount, uint dwNewLockCount)
+        {
+
         }
     }
 }

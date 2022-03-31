@@ -1,10 +1,12 @@
 ﻿using Elders.VSE_FormatDocumentOnSave.Configurations;
 using EnvDTE;
+using EnvDTE80;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace Elders.VSE_FormatDocumentOnSave
 {
@@ -31,7 +33,7 @@ namespace Elders.VSE_FormatDocumentOnSave
     [ProvideOptionPage(typeof(VisualStudioConfiguration), "Format Document On Save", "General", 0, 0, true)]
     public sealed class FormatDocumentOnSavePackage : AsyncPackage, IAsyncLoadablePackageInitialize
     {
-        private FormatDocumentOnBeforeSave plugin;
+        private IVsRunningDocTableEvents plugin;
 
         /// <summary>
         /// Default constructor of the package.
@@ -42,21 +44,20 @@ namespace Elders.VSE_FormatDocumentOnSave
         /// </summary>
         public FormatDocumentOnSavePackage() { }
 
-        public IVsTask Initialize(Microsoft.VisualStudio.Shell.Interop.COMAsyncServiceProvider.IAsyncServiceProvider pServiceProvider, IProfferAsyncService pProfferService, IAsyncProgressCallback pProgressCallback)
+        protected override async Task InitializeAsync(System.Threading.CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
-            return ThreadHelper.JoinableTaskFactory.RunAsync<object>(async () =>
-            {
-                var dte = await pServiceProvider.GetServiceAsync<DTE>(typeof(DTE));
+            await base.InitializeAsync(cancellationToken, progress);
 
-                var runningDocumentTable = new RunningDocumentTable(this);
-                var defaultConfig = (VisualStudioConfiguration)GetDialogPage(typeof(VisualStudioConfiguration));
+            await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            
+            DTE dte = (DTE)await GetServiceAsync(typeof(DTE));
 
-                var documentFormatService = new DocumentFormatService(dte, (doc) => new FormatDocumentConfiguration(doc, defaultConfig));
-                plugin = new FormatDocumentOnBeforeSave(dte, runningDocumentTable, documentFormatService);
-                runningDocumentTable.Advise(plugin);
+            var runningDocumentTable = new RunningDocumentTable(this);
+            var defaultConfig = (VisualStudioConfiguration)GetDialogPage(typeof(VisualStudioConfiguration));
 
-                return null;
-            }).AsVsTask();
+            var documentFormatService = new DocumentFormatService(dte, (doc) => new FormatDocumentConfiguration(doc, defaultConfig));
+            plugin = new FormatDocumentOnBeforeSave(dte, runningDocumentTable, documentFormatService);
+            runningDocumentTable.Advise(plugin);
         }
     }
 }
