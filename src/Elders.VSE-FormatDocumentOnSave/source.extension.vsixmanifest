@@ -1,30 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-	<Metadata>
-		<Identity Id="2f4fac85-be4e-4d7a-8c74-93cc4389b427" Version="3.1" Language="en-US" Publisher="Elders" />
-		<DisplayName>Format document on Save</DisplayName>
-		<Description xml:space="preserve">Enables auto formatting of the code when you save a file. Visual Studio supports auto formatting of the code with the CTRL+E,D or CTRL+E,F key shortcuts but with this extension the VS command 'Format Document' is executed on Save.
+    <Metadata>
+        <Identity Id="2f4fac85-be4e-4d7a-8c74-93cc4389b427" Version="3.4" Language="en-US" Publisher="Elders" />
+        <DisplayName>Format document on Save</DisplayName>
+        <Description xml:space="preserve">Enables auto formatting of the code when you save a file. Visual Studio supports auto formatting of the code with the CTRL+E,D or CTRL+E,F key shortcuts but with this extension the VS command 'Format Document' is executed on Save.
 
 You can find the source here: https://github.com/Elders/VSE-FormatDocumentOnSave</Description>
-	</Metadata>
-	<Installation>
-		<InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,19.0)">
-			<ProductArchitecture>amd64</ProductArchitecture>
-		</InstallationTarget>
-		<InstallationTarget Version="[17.0,19.0)" Id="Microsoft.VisualStudio.Pro">
-			<ProductArchitecture>amd64</ProductArchitecture>
-		</InstallationTarget>
-		<InstallationTarget Version="[17.0,19.0)" Id="Microsoft.VisualStudio.Enterprise">
-			<ProductArchitecture>amd64</ProductArchitecture>
-		</InstallationTarget>
-	</Installation>
-	<Dependencies>
-		<Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
-	</Dependencies>
-	<Assets>
-		<Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
-	</Assets>
-	<Prerequisites>
-		<Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[12.0,18.0)" DisplayName="Visual Studio core editor" />
-	</Prerequisites>
+    </Metadata>
+    <Installation>
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,19.0)">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+        <InstallationTarget Version="[17.0,19.0)" Id="Microsoft.VisualStudio.Pro">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+        <InstallationTarget Version="[17.0,19.0)" Id="Microsoft.VisualStudio.Enterprise">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+    </Dependencies>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+    </Assets>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[12.0,18.0)" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
 </PackageManifest>

@@ -40,7 +40,19 @@ namespace Elders.VSE_FormatDocumentOnSave
 
         public bool IsAllowed(Document document)
         {
-            return isAllowed(document);
+            return IsForbiddenExtension(document) == false && isAllowed(document);
         }
+
+        /// <summary>
+        /// We are forcibly denying the extensions bellow for VS2022. There are fundamental changes in visual studio which makes this plugin unusable.
+        /// People just do not realize this and they do not read the issues => https://github.com/Elders/VSE-FormatDocumentOnSave/issues/44
+        /// For that reason the extension will never work for the specified extensions.
+        /// </summary>
+        private bool IsForbiddenExtension(Document doc)
+        {
+            return ForbiddenExtensions.Where(f => doc.FullName.EndsWith(f, StringComparison.OrdinalIgnoreCase)).Any();
+        }
+
+        static IEnumerable<string> ForbiddenExtensions => new List<string> { ".razor", ".html", ".xml", ".cshtml" };
     }
 }
