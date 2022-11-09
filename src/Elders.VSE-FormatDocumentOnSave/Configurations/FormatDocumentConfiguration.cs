@@ -10,6 +10,8 @@ namespace Elders.VSE_FormatDocumentOnSave.Configurations
 
         public FormatDocumentConfiguration(Document doc, IConfiguration defaultCfg)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+
             configuration = defaultCfg;
 
             FileInfo cfgFile = new FileInfo(Path.Combine(doc.Path, ".formatconfig"));
