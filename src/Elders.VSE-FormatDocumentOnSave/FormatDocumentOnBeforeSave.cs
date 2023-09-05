@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EnvDTE;
+using EnvDTE80;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -9,11 +11,11 @@ namespace Elders.VSE_FormatDocumentOnSave
 {
     internal class FormatDocumentOnBeforeSave : IVsRunningDocTableEvents3
     {
-        private readonly DTE _dte;
+        private readonly DTE2 _dte;
         private readonly RunningDocumentTable _runningDocumentTable;
         private readonly DocumentFormatService _documentFormatter;
 
-        public FormatDocumentOnBeforeSave(DTE dte, RunningDocumentTable runningDocumentTable, DocumentFormatService documentFormatter)
+        public FormatDocumentOnBeforeSave(DTE2 dte, RunningDocumentTable runningDocumentTable, DocumentFormatService documentFormatter)
         {
             _runningDocumentTable = runningDocumentTable;
             _documentFormatter = documentFormatter;
@@ -73,14 +75,21 @@ namespace Elders.VSE_FormatDocumentOnSave
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            var documentInfo = _runningDocumentTable.GetDocumentInfo(docCookie);
-            var documentPath = documentInfo.Moniker;
-
-            return _dte.Documents.Cast<Document>().FirstOrDefault(doc =>
+            try
             {
-                ThreadHelper.ThrowIfNotOnUIThread();
-                return doc.FullName == documentPath;
-            });
+                var documentInfo = _runningDocumentTable.GetDocumentInfo(docCookie);
+                var documentPath = documentInfo.Moniker;
+
+                return _dte.Documents.Cast<Document>().FirstOrDefault(doc =>
+                {
+                    ThreadHelper.ThrowIfNotOnUIThread();
+                    return doc.FullName == documentPath;
+                });
+            }
+            catch (Exception)
+            {
+                return _dte.ActiveDocument;
+            }
         }
 
         public void OnAfterDocumentLockCountChanged(uint docCookie, uint dwRDTLockType, uint dwOldLockCount, uint dwNewLockCount)

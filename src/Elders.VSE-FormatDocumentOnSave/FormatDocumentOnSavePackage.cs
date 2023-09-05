@@ -1,10 +1,12 @@
 ﻿using Elders.VSE_FormatDocumentOnSave.Configurations;
 using EnvDTE;
 using EnvDTE80;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
+using System.ComponentModel.Composition;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
@@ -49,8 +51,10 @@ namespace Elders.VSE_FormatDocumentOnSave
             await base.InitializeAsync(cancellationToken, progress);
 
             await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            
-            DTE dte = (DTE)await GetServiceAsync(typeof(DTE));
+
+            var dte = await GetServiceAsync(typeof(DTE)).ConfigureAwait(false) as DTE2;
+            //var asd = (DTE2)GetGlobalService(typeof(DTE2));
+            //DTE2 dte2 = (DTE2)await GetServiceAsync(typeof(DTE));
 
             var runningDocumentTable = new RunningDocumentTable(this);
             var defaultConfig = (VisualStudioConfiguration)GetDialogPage(typeof(VisualStudioConfiguration));

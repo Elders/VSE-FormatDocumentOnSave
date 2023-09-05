@@ -8,11 +8,11 @@ namespace Elders.VSE_FormatDocumentOnSave
 {
     public class DocumentFormatService
     {
-        private readonly DTE dte;
+        private readonly DTE2 dte;
         readonly Func<Document, IConfiguration> getGeneralCfg;
         readonly IDocumentFormatter formatter;
 
-        public DocumentFormatService(DTE dte, Func<Document, IConfiguration> getGeneralCfg)
+        public DocumentFormatService(DTE2 dte, Func<Document, IConfiguration> getGeneralCfg)
         {
             this.dte = dte;
             this.getGeneralCfg = getGeneralCfg;
@@ -22,6 +22,7 @@ namespace Elders.VSE_FormatDocumentOnSave
 
         public void FormatDocument(Document doc)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             if (ShouldFormat(doc) == false)
                 return;
 
@@ -50,7 +51,7 @@ namespace Elders.VSE_FormatDocumentOnSave
             if (doc.Saved || System.Windows.Forms.Control.IsKeyLocked(System.Windows.Forms.Keys.CapsLock))
                 return false;
 
-            bool vsIsInDebug = dte.Mode == vsIDEMode.vsIDEModeDebug;
+            bool vsIsInDebug = dte.Mode == EnvDTE.vsIDEMode.vsIDEModeDebug;
             var cfg = getGeneralCfg(doc);
 
             if (vsIsInDebug == true && cfg.EnableInDebug == false)

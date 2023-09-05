@@ -33,13 +33,17 @@ namespace Elders.VSE_FormatDocumentOnSave
             bool areAllExtensionsDenied = deniedExtensions.Where(ext => ext.Equals(".*")).Any();
 
             isAllowed = doc =>
-                areAllExtensionsAllowed ||
-                approvedExtensions.Any(ext => doc.FullName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)) ||
-                (bannedExtensions.Any(ext => doc.FullName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)) == false && areAllExtensionsDenied == false);
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+                return areAllExtensionsAllowed ||
+                approvedExtensions.Any(ext => { ThreadHelper.ThrowIfNotOnUIThread(); return doc.FullName.EndsWith(ext, StringComparison.OrdinalIgnoreCase); }) ||
+                (bannedExtensions.Any(ext => { ThreadHelper.ThrowIfNotOnUIThread(); return doc.FullName.EndsWith(ext, StringComparison.OrdinalIgnoreCase); }) == false && areAllExtensionsDenied == false);
+            };
         }
 
         public bool IsAllowed(Document document)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             return IsForbiddenExtension(document) == false && isAllowed(document);
         }
 
@@ -50,7 +54,7 @@ namespace Elders.VSE_FormatDocumentOnSave
         /// </summary>
         private bool IsForbiddenExtension(Document doc)
         {
-            return ForbiddenExtensions.Where(f => doc.FullName.EndsWith(f, StringComparison.OrdinalIgnoreCase)).Any();
+            return ForbiddenExtensions.Where(f => { ThreadHelper.ThrowIfNotOnUIThread(); return doc.FullName.EndsWith(f, StringComparison.OrdinalIgnoreCase); }).Any();
         }
 
         static IEnumerable<string> ForbiddenExtensions => new List<string> { ".razor", ".html", ".xml", ".cshtml" };

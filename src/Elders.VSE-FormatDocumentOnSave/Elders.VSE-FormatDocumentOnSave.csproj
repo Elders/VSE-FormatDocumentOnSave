@@ -56,16 +56,16 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Memory">
       <Version>6.0.1</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.3.32804.24" ExcludeAssets="runtime">
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.7.37357" ExcludeAssets="runtime">
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.4.1111">
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.6.2164">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="editorconfig" Version="0.13.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Framework" Version="17.3.32804.24" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop" Version="17.3.32804.24" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.Framework" Version="17.7.37355" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop" Version="17.7.37355" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp">
