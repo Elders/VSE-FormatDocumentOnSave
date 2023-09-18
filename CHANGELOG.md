@@ -1,3 +1,7 @@
+# v3.10
+* Disables all additional features for Visual Studio versions with broken SDK
+* The features will be automatically enabled when Visual Studio SDK has the proper version
+
 # v3.0
 * [barnuri](https://github.com/barnuri) Adds support for VisualStudio 2022
 * Going forward versions of Visual Studio prior 2022 will not be supported
