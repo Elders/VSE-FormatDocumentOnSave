@@ -1,3 +1,7 @@
+# v3.11
+* Updates nuget packages
+* This version is tested and working with Microsoft Visual Studio Community 2022 (64-bit) Version 17.9.4
+
 # v3.10
 * Disables all additional features for Visual Studio versions with broken SDK
 * The features will be automatically enabled when Visual Studio SDK has the proper version
