@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.IO;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 
@@ -17,27 +18,37 @@ namespace Elders.VSE_FormatDocumentOnSave
         /// </summary>
         public AllowDenyDocumentFilter() { }
 
+        public bool MatchesList(IEnumerable<string> list, string filePath)
+        {
+            string fileName = Path.GetFileName(filePath);
+            string extension = Path.GetExtension(filePath);
+
+            foreach (string element in list)
+            { 
+                if(string.IsNullOrEmpty(element))
+                    continue;
+                if (element.Equals(".*"))
+                    return true;
+                if (fileName.EndsWith(element, StringComparison.OrdinalIgnoreCase))
+                    return true;
+                if (extension.EndsWith(element, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            return false;
+        }
+        
         public AllowDenyDocumentFilter(IEnumerable<string> allowedExtensions, IEnumerable<string> deniedExtensions)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            IEnumerable<string> bannedExtensions = deniedExtensions
-                .Except(allowedExtensions)
-                .Where(ext => ext.Equals(".*") == false && string.IsNullOrEmpty(ext) == false);
-
-            IEnumerable<string> approvedExtensions = allowedExtensions
-                .Except(deniedExtensions)
-                .Where(ext => ext.Equals(".*") == false && string.IsNullOrEmpty(ext) == false);
-
-            bool areAllExtensionsAllowed = allowedExtensions.Where(ext => ext.Equals(".*")).Any();
-            bool areAllExtensionsDenied = deniedExtensions.Where(ext => ext.Equals(".*")).Any();
-
             isAllowed = doc =>
             {
                 ThreadHelper.ThrowIfNotOnUIThread();
-                return areAllExtensionsAllowed ||
-                approvedExtensions.Any(ext => { ThreadHelper.ThrowIfNotOnUIThread(); return doc.FullName.EndsWith(ext, StringComparison.OrdinalIgnoreCase); }) ||
-                (bannedExtensions.Any(ext => { ThreadHelper.ThrowIfNotOnUIThread(); return doc.FullName.EndsWith(ext, StringComparison.OrdinalIgnoreCase); }) == false && areAllExtensionsDenied == false);
+                if(MatchesList(allowedExtensions, doc.FullName))
+                    if(!MatchesList(deniedExtensions, doc.FullName))
+                        return true;
+                return false;
             };
         }
 
