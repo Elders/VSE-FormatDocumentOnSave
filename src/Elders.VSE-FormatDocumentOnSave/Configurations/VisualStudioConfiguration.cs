@@ -12,13 +12,13 @@ namespace Elders.VSE_FormatDocumentOnSave.Configurations
         public bool IsEnable { get; set; } = true;
 
         [Category("Format Document On Save")]
-        [DisplayName("Allowed extensions")]
-        [Description("Space separated list. For example: [.cs .html .cshtml .vb] Overrides extensions listed in Denied section. When you use [.*] the extensions listed in Denied section will be ignored. Empty value respects all extensions listed in Denied section.")]
+        [DisplayName("Allowed extensions or filenames")]
+        [Description("Space separated list. For example: [.cs .html .cshtml .vb .h .cpp]. The file extension (.cs) or filename (somefile.cs) needs to match an entry in the list to get formatted. The allow list is checked prior to the denie list.")]
         public string Allowed { get; set; } = ".*";
 
         [Category("Format Document On Save")]
-        [DisplayName("Denied extensions")]
-        [Description("Space separated list. For example: [.cs .html .cshtml .vb]")]
+        [DisplayName("Denied extensions or filenames")]
+        [Description("Space separated list. For example: [resource.h]. The file extension (.cs) or filename (somefile.cs) needs to match an entry in the list to NOT get formatted")]
         public string Denied { get; set; } = "";
 
         [Category("Format Document On Save")]
